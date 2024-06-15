@@ -190,38 +190,38 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
         
         lang = name[-7:-5]
         excel_num = "" # excel_num represents the id of previous step of P-NAL experiment, which provides finetuning entity set for this step of experiment 
-        setting3_bootsrtap = 2  #False  True
+        bootsrtap = 2  #False  True
         if table_setting == 0 or table_setting == 4:
             excel_num = ""
         else:
             if lang == "zh":
                 if table_setting == 3:
-                    if setting3_bootsrtap == 0:
+                    if bootsrtap == 0:
                         excel_num = "301"
-                    elif setting3_bootsrtap == 1:
-                        excel_num = "342" #342
-                    elif setting3_bootsrtap == 2:
-                        excel_num = "351"#"351"
+                    elif bootsrtap == 1:
+                        excel_num = "488" #342
+                    elif bootsrtap == 2:
+                        excel_num = "498"#"351"
                 else:
                     excel_num = "194"#194
             elif lang == "ja":
                 if table_setting == 3:
-                    if setting3_bootsrtap == 0:
+                    if bootsrtap == 0:
                         excel_num = "334"
-                    elif setting3_bootsrtap == 1:
-                        excel_num = "343" #343
-                    elif setting3_bootsrtap == 2:
-                        excel_num = "352"#"352"
+                    elif bootsrtap == 1:
+                        excel_num = "487" #343
+                    elif bootsrtap == 2:
+                        excel_num = "352"#"496" "352"
                 else:
                     excel_num = "204"
             elif lang == "fr":
                 if table_setting == 3:
-                    if setting3_bootsrtap == 0:
+                    if bootsrtap == 0:
                         excel_num = "335"
-                    elif setting3_bootsrtap == 1:
-                        excel_num = "410" #344
-                    elif setting3_bootsrtap == 2:
-                        excel_num = "411"#"353"
+                    elif bootsrtap == 1:
+                        excel_num = "480" #410  344
+                    elif bootsrtap == 2:
+                        excel_num = "484"#"411  353"
                 else:
                     excel_num = "216"
             excel_num = excel_num + "_"
@@ -254,8 +254,8 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
             increse_relation_frequency = 0
             increse_attribute_frequency = 0
         else:
-            increse_relation_frequency = 0.5# #0.85
-            increse_attribute_frequency = 0.5
+            increse_relation_frequency = 0# # 0.5  0.85
+            increse_attribute_frequency = 0
         
 
         if table_setting == -1:
@@ -271,7 +271,7 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
             use_translate_emb = "false"
             use_attribute_value_emb_sim = "true"   #"true" "false"
         elif table_setting == 3:
-            if setting3_bootsrtap == 0:
+            if bootsrtap == 0:
                 use_entity_emb_sim = "false"    #"true" "false"
             else:
                 use_entity_emb_sim = "true"
@@ -308,38 +308,45 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
             use_entity_emb_sim = "true"    #"true" "false"
             use_translate_emb = "false"
             use_attribute_value_emb_sim = "false"   #"true" "false"
-        if dataset_type == "DW":
+        
+        if dataset_type == "DW" or dataset_type == "DY":
             use_entity_emb_sim = "false"    #"true" "false"
             use_translate_emb = "false"
             use_attribute_value_emb_sim = "false"   #"true" "false"
+        
+
+
+        if table_setting != 3:
+            bootsrtap = 1
+
 
         
         if table_setting == 3:
             if lang == "fr":
-                if setting3_bootsrtap == 0:
+                if bootsrtap == 0:
                     entity_emb_sim_confidence = 0.45 #0.6
                     trans_entity_emb_sim_confidence = 0.45
-                elif setting3_bootsrtap == 1:
+                elif bootsrtap == 1:
                     entity_emb_sim_confidence = 0.55 #0.6
                     trans_entity_emb_sim_confidence = 0.55
-                elif setting3_bootsrtap == 2:
+                elif bootsrtap == 2:
                     entity_emb_sim_confidence = 0.65 #0.6
                     trans_entity_emb_sim_confidence = 0.65
             else:
-                if setting3_bootsrtap == 0:  # 0.6 c = 1.5 w; 0.75w = 0.42857 c      ; 0.8 c = 4 w; 2w = 0.666 cs
+                if bootsrtap == 0:  # 0.6 c = 1.5 w; 0.75w = 0.42857 c      ; 0.8 c = 4 w; 2w = 0.666 cs
                     entity_emb_sim_confidence = 0.2 #0.6
                     trans_entity_emb_sim_confidence = 0.2
-                elif setting3_bootsrtap == 1:
+                elif bootsrtap == 1:
                     entity_emb_sim_confidence = 0.3 #0.6
                     trans_entity_emb_sim_confidence = 0.3
-                elif setting3_bootsrtap == 2:
+                elif bootsrtap == 2:
                     entity_emb_sim_confidence = 0.4 #0.6
                     trans_entity_emb_sim_confidence = 0.4
         else:
             if lang == "fr":
                 entity_emb_sim_confidence = 0.8
             else:
-                entity_emb_sim_confidence = 0.6
+                entity_emb_sim_confidence = 0.6  # 0.6
         
         
         attribute_value_emb_sim_confidence = 0.8
@@ -354,15 +361,14 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
         ini_file.write(f'increse_attribute_frequency = {increse_attribute_frequency}\n')
         ini_file.write('use_entity_emb_sim = %s\n' % use_entity_emb_sim)
         ini_file.write('use_translate_emb = %s\n' % use_translate_emb)
-        ini_file.write('setting3_bootsrtap = %s\n' % setting3_bootsrtap)
+        ini_file.write('bootsrtap = %s\n' % bootsrtap)
         ini_file.write('entity_emb_sim_confidence = %s\n' % entity_emb_sim_confidence)
         ini_file.write('trans_entity_emb_sim_confidence = %s\n' % trans_entity_emb_sim_confidence)
         ini_file.write('use_attribute_value_emb_sim = %s\n' % use_attribute_value_emb_sim)
         ini_file.write('attribute_value_emb_sim_confidence = %s\n' % attribute_value_emb_sim_confidence)
         ini_file.write('literal_approximate_equal_count = %s\n' % literal_approximate_equal_count)
         ini_file.write(f'value_similarity_lower_bound = {value_similarity_lower_bound}\n')
-        ini_file.write(f'all_revision = {all_revision}\n')
-        ini_file.write(f'all_prob_revision = {all_prob_revision}\n')
+        
         ini_file.write('dataset_in_path = %s\n' % dataset_in)
         ini_file.write('entity_emb = %s\n' % entity_emb)
         ini_file.write('trans_entity_emb = %s\n' % trans_entity_emb)
@@ -392,22 +398,41 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
         if table_setting == 3:
             max_alignment_sentences = 400
         else:
-            max_alignment_sentences = 400#80
-        #从第几轮开始记录和显示证据
-        endIteration = 22
-        add_evidence_remove_duplicate_run = 15 #15
-        display_evidence_run = 0
-        nThreads = 8  #CPU 38
+            max_alignment_sentences = 80#80
+        endIteration = 20
+        display_evidence_run = 0  #从第几轮开始记录和显示证据
+        nThreads = 12  #CPU 38
         use_c_as_probability_value = "false" #false  true
+        add_evidence_remove_duplicate_run = 15 #15
+        
+        precompute_emb_sim = "false"
+        adaptive_entity_emb_sim_confidence = "true"
+        if precompute_emb_sim == "true":
+            adaptive_entity_emb_sim_confidence = "false"
+        modify_initial_confidence = "false"
+        entity_clustering = "false"
+        entity_clustering_run = 17 #3
+        use_path_3 = "true"
+        missing_triple_initial_confidence = 0.5
         ini_file.write('max_alignment_sentences = %s\n' % max_alignment_sentences)
         ini_file.write('endIteration = %s\n' % endIteration)
         ini_file.write(f'display_evidence_run = {display_evidence_run}\n')
         ini_file.write(f'nThreads = {nThreads}\n')
         ini_file.write(f'use_c_as_probability_value = {use_c_as_probability_value}\n')
         ini_file.write(f'add_evidence_remove_duplicate_run = {add_evidence_remove_duplicate_run}\n')
+        
+        ini_file.write(f'all_revision = {all_revision}\n')
+        ini_file.write(f'all_prob_revision = {all_prob_revision}\n')
+        ini_file.write(f'precompute_emb_sim = {precompute_emb_sim}\n')
+        ini_file.write(f'adaptive_entity_emb_sim_confidence = {adaptive_entity_emb_sim_confidence}\n')
+        ini_file.write(f'modify_initial_confidence = {modify_initial_confidence}\n')
+        ini_file.write(f'entity_clustering = {entity_clustering}\n')
+        ini_file.write(f'entity_clustering_run = {entity_clustering_run}\n')
+        ini_file.write(f'use_path_3 = {use_path_3}\n')
+        ini_file.write(f'missing_triple_initial_confidence = {missing_triple_initial_confidence}\n')
 
                                                        #PARIS_xch2.1.jar  paris.jar -Xmx26000m
-    _ = subprocess.call(['java', '-Xmx45000m', '-Xss64m', '-jar', 'PNAL.jar', task_name + '/paris.ini'])
+    _ = subprocess.call(['java', '-Xmx60000m', '-Xss64m', '-jar', 'pnal-1.0.0-jar-with-dependencies.jar', task_name + '/paris.ini'])
     return task_name, endIteration
 
 

@@ -2,17 +2,17 @@ import os
 from utils import * 
 import functools
 import random
-output_path = "/home/2022xuch/paris/entity-matchers-master/output"
+output_path = "/home/2022xuch/PNAL/PNALoverall/output"
 #lang = "zh"
 #lang_path = "/zh_en"
 #prefix1 = "http://" + lang + ".dbpedia.org/resource/"
 #prefix2 = "http://dbpedia.org/resource/"
-fold_path = "/DBP15k_full_fr_en_2_0222_212439"
-excel_num = 411
+fold_path = "/DBP15k_full_fr_en_2_0613_233951"
+excel_num = 484
 full_fold_path = output_path + fold_path
 
 #dataset_path = "/home/2022xuch/paris/datasets/DBP15k_full_" + lang + "_en_2"
-run = 21 #21
+run = 19 #21
 
 abbreviate_dict = {"http://dbpedia.org/resource/":"dbp_en:","http://dbpedia.org/property/":"dbp_en_prop:","http://zh.dbpedia.org/resource/":"dbp_zh:","http://zh.dbpedia.org/property/":"dbp_zh_prop:"
                    ,"http://fr.dbpedia.org/resource/":"dbp_fr:","http://fr.dbpedia.org/property/":"dbp_fr_prop:"
@@ -66,6 +66,6 @@ with open(eqv_path, 'r', encoding='utf-8') as file:
 sup_path1 = full_fold_path + "/sup_pairs_" + str(excel_num)
 with open(sup_path1, 'w', encoding='utf-8') as file:
     for align in eqv:
-        if align[2] >= 0.6:
+        if align[2] >= 0.9:
             file.write(f"{align[0]}\t{align[1]}\n")
     

@@ -123,7 +123,22 @@ def main(root_folder, dataset):
             lines.append("{}\t{}\t{}\n".format(tuple1[0], tuple1[1], tuple1[2]))
     with open(new_dataset_folder + "/rel_triples_2", "w", encoding = "utf8") as f:
         f.writelines(lines)
-
+    
+    for fold in os.listdir(new_dataset_folder + "/721_5fold"):
+        for name in ["test_links", "train_links", "valid_links"]:
+            foldi = new_dataset_folder + "/721_5fold/" + fold + "/" + name
+            lines = []
+            with open(foldi, encoding = "utf8") as f:
+                for l in f:
+                    #print(l.rstrip("\n").rstrip(".").rstrip().split("\t", maxsplit = 2))
+                    if (not l.rstrip("\n")):
+                        continue
+                    (e1,e2) = l.rstrip("\n").split("\t", maxsplit = 1)
+                    e1 = abbreviate(e1)
+                    e2 = abbreviate(e2)
+                    lines.append("{}\t{}\n".format(e1, e2))
+            with open(foldi, "w", encoding = "utf8") as f:
+                f.writelines(lines)
 
 
 
@@ -147,5 +162,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     """
-    main("/home/2022xuch/paris/datasets", "D_W_15K_V2")
+    main("/home/2022xuch/PNAL/datasets", "D_W_15K_V2")
+    main("/home/2022xuch/PNAL/datasets", "D_W_100K_V2")
+    main("/home/2022xuch/PNAL/datasets", "D_Y_15K_V2")
+    main("/home/2022xuch/PNAL/datasets", "D_Y_100K_V2")
+
+    main("/home/2022xuch/PNAL/datasets", "D_W_15K_V1")
+    main("/home/2022xuch/PNAL/datasets", "D_W_100K_V1")
+    main("/home/2022xuch/PNAL/datasets", "D_Y_15K_V1")
+    main("/home/2022xuch/PNAL/datasets", "D_Y_100K_V1")
 

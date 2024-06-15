@@ -2,16 +2,16 @@ import os
 from utils import * 
 import functools
 import random
-output_path = "/home/2022xuch/paris/entity-matchers-master/output"
+output_path = "/home/2022xuch/PNAL/PNALoverall/output"
 #lang_path = "/zh_en"
-fold_path = "/D_W_15K_V2_0217_225621"
+fold_path = "/DBP15k_full_ja_en_2_0609_183522"
 full_fold_path = output_path + fold_path
 
 zero_seed = True
 filter = 0#0.1
 
-dataset_path = "/home/2022xuch/paris/datasets/D_W_15K_V2"
-run = 21 #21
+dataset_path = "/home/2022xuch/PNAL/datasets/DBP15k_full_ja_en_2"
+run = 19 #21
 eqv_path = full_fold_path + "/output/" + str(run) + "_eqv.tsv"
 train_path = full_fold_path + "/" + "train" + "_links"
 valid_path = full_fold_path + "/" + "valid" + "_links"
@@ -86,6 +86,12 @@ for align in valid_test:
 if not os.path.exists(inspect_path):
     os.mkdir(inspect_path)
 
+res_in_train_or_vt = []
+for align in eqv:
+    if (align[0], align[1]) in set_train or (align[0], align[1]) in set_valid or (align[0], align[1]) in set_test:
+        # Evaluate only the alignments that were not present in the training data (seed).
+        res_in_train_or_vt.append(align)
+
 
 def compute_prec_rec_f1_1(aligns, truth_links):
 
@@ -107,6 +113,7 @@ with open(inspect_path1, 'w', encoding='utf-8') as file:
     file.write(f"len(valid_test_no_res):{len(valid_test_no_res)}\n valid_test_no_res: \n")
 
     res_no_train_no_vt.sort(key = lambda x:x[2]) #functools.cmp_to_key(compare_1)
+    res_in_train_or_vt.sort(key = lambda x:x[2])
     valid_test_no_res.sort(key = lambda x:x[0])
 
     for align in valid_test_no_res:
@@ -115,6 +122,11 @@ with open(inspect_path1, 'w', encoding='utf-8') as file:
     file.write(f"\n\n\n\n\n\n\n\n\n\n\n\n len(res_no_train_no_vt):{len(res_no_train_no_vt)}  \n\n")
     for align in res_no_train_no_vt:
         file.write(f"{align[0]:<40}{align[1]:<60}{align[2]:<40} \n")
+    
+    file.write(f"\n\n\n\n\n\n\n\n\n\n\n\n len(res_in_train_or_vt):{len(res_in_train_or_vt)}  \n\n")
+    for align in res_in_train_or_vt:
+        file.write(f"{align[0]:<40}{align[1]:<60}{align[2]:<40} \n")
+    
     
 
 
@@ -260,7 +272,7 @@ def inspect_align(ratio = 1, group = valid_test_no_res, group_name = "valid_test
                     file.write(f"未出现\n")
 
 #inspect_align()
-inspect_align(1)
+#inspect_align(1)
 #inspect_align(1, res_no_train_no_vt, "res_no_train_no_vt")
 #print(inspect_entity(1, "dbp_en:Gorillaz"))
 

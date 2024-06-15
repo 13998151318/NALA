@@ -21,11 +21,16 @@ def abbreviate(str1, r=0, attribute=0):
         if str1.startswith(full):
             str1 = abbreviate_dict[full] + str1[len(full):]
             break
-    if r:
+    if r == 1:
         if attribute and not str1.startswith("attr_"):
             str1 = "attr_" + str1
         elif not attribute and not str1.startswith("rel_"):
             str1 = "rel_" + str1
+    if r == 2:
+        if attribute and str1.startswith("attr_"):
+            str1 = str1[len("attr_"):]
+        elif not attribute and str1.startswith("rel_"):
+            str1 = str1[len("rel_"):]
     return str1
 
 def abbreviate_attribute_value(str1):
@@ -38,7 +43,7 @@ def abbreviate_attribute_value(str1):
 def strip_bracket_and_abbreviate(str, r, attribute):
     return abbreviate(str.lstrip('<').rstrip('>'), r, attribute)
 
-def split3(l, with_dot_and_space = 0, attribute = 0):
+def split3(l, with_dot_and_space = 0, attribute = 0, add_r_prefix = True):
     if (not l.rstrip("\n")):
         return None
     if with_dot_and_space:
@@ -56,7 +61,10 @@ def split3(l, with_dot_and_space = 0, attribute = 0):
 
     (e1, r, a) = list1
     e1 = strip_bracket_and_abbreviate(e1, 0, 0)
-    r = strip_bracket_and_abbreviate(r, 1, attribute)
+    if add_r_prefix == True:
+        r = strip_bracket_and_abbreviate(r, 1, attribute)
+    else:
+        r = strip_bracket_and_abbreviate(r, 2, attribute)
     if attribute:
         a = abbreviate_attribute_value(a)
     else:
@@ -116,6 +124,7 @@ def main(root_folder, dataset):
         f.writelines(lines)
 
     lines = []
+    attr_1 = set()
     with open(new_dataset_folder + "/attr_triples_1", encoding = "utf8") as f:
         for l in f:
             #print(l.rstrip("\n").rstrip(".").rstrip().split("\t", maxsplit = 2))
@@ -125,9 +134,12 @@ def main(root_folder, dataset):
             if tuple1[0] not in fs1_entities:
                 continue
             lines.append("{}\t{}\t{}\n".format(tuple1[0], tuple1[1], tuple1[2]))
+            tuple2 = split3(l,1,1,False)
+            attr_1.add(tuple2[1])
     with open(new_dataset_folder + "/attr_triples_1", "w", encoding = "utf8") as f:
         f.writelines(lines)
     lines = []
+    attr_2 = set()
     with open(new_dataset_folder + "/attr_triples_2", encoding = "utf8") as f:
         for l in f:
             tuple1 = split3(l,1,1)
@@ -136,11 +148,15 @@ def main(root_folder, dataset):
             if tuple1[0] not in fs2_entities:
                 continue
             lines.append("{}\t{}\t{}\n".format(tuple1[0], tuple1[1], tuple1[2]))
+            tuple2 = split3(l,1,1,False)
+            attr_2.add(tuple2[1])
     with open(new_dataset_folder + "/attr_triples_2", "w", encoding = "utf8") as f:
         f.writelines(lines)
 
 
     lines = []
+    rel_1 = set()
+    rel_triple1 = []
     with open(new_dataset_folder + "/rel_triples_1", encoding = "utf8") as f:
         for l in f:
             #print(l.rstrip("\n").rstrip(".").rstrip().split("\t", maxsplit = 2))
@@ -150,10 +166,15 @@ def main(root_folder, dataset):
             if tuple1[0] not in fs1_entities or tuple1[2] not in fs1_entities :
                 continue
             lines.append("{}\t{}\t{}\n".format(tuple1[0], tuple1[1], tuple1[2]))
+            tuple2 = split3(l,0,0,False)
+            rel_1.add(tuple2[1])
+            rel_triple1.append(tuple1)
     with open(new_dataset_folder + "/rel_triples_1", "w", encoding = "utf8") as f:
         f.writelines(lines)
 
     lines = []
+    rel_2 = set()
+    rel_triple2 = []
     with open(new_dataset_folder + "/rel_triples_2", encoding = "utf8") as f:
         for l in f:
             tuple1 = split3(l)
@@ -162,8 +183,58 @@ def main(root_folder, dataset):
             if tuple1[0] not in fs2_entities or tuple1[2] not in fs2_entities :
                 continue
             lines.append("{}\t{}\t{}\n".format(tuple1[0], tuple1[1], tuple1[2]))
+            tuple2 = split3(l,0,0,False)
+            rel_2.add(tuple2[1])
+            rel_triple2.append(tuple2)
     with open(new_dataset_folder + "/rel_triples_2", "w", encoding = "utf8") as f:
         f.writelines(lines)
+    
+    print(f"len(attr_1):{len(attr_1)}")
+    list_attr_1 = list(attr_1)
+    print(list_attr_1[0],list_attr_1[1],list_attr_1[2])
+    print(f"len(rel_1):{len(rel_1)}")
+    list_rel_1 = list(rel_1)
+    print(list_rel_1[0],list_rel_1[1],list_rel_1[2])
+    print(f"len(attr_1 & rel_1):{len(attr_1 & rel_1)}")
+    print(f"len(attr_2):{len(attr_2)}")
+    print(f"len(rel_2):{len(rel_2)}")
+    print(f"len(attr_2 & rel_2):{len(attr_1 & rel_1)}")
+    print()
+
+    rel_triples = dict()
+    for t in rel_triple1:
+        if t[0] not in rel_triples:
+            rel_triples[t[0]] = [t]
+        else:
+            rel_triples[t[0]].append(t)
+    lines = []
+    for e in rel_triples.keys():
+        rel_list = []
+        rel_list_done = []
+        for t in rel_triples[e]:
+            if t[1] not in rel_list_done:
+                if t[1] in rel_list:
+                    for t2 in rel_triples[e]:
+                        if t2[1]==t[1]:
+                            lines.append("{}\t{}\t{}\n".format(t2[0], t2[1], t2[2]))
+                    rel_list_done.append(t[1])
+                else:
+                    rel_list.append(t[1])
+    with open(new_dataset_folder + "/rel_triple1_same_h_r", "w", encoding = "utf8") as f:
+        f.writelines(lines)
+    rel_triples_r = dict()
+    for t in rel_triple1:
+        if t[1] not in rel_triples_r:
+            rel_triples_r[t[1]] = [t]
+        else:
+            rel_triples_r[t[1]].append(t)
+    lines = []
+    for r in rel_triples_r.keys():
+        for e in rel_triples_r[r]:
+            lines.append("{}\t{}\t{}\n".format(e[0], e[1], e[2]))
+    with open(new_dataset_folder + "/rel_triple1_same_r", "w", encoding = "utf8") as f:
+        f.writelines(lines)
+
 
 
 
@@ -188,6 +259,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     """
-    main("/home/2022xuch/paris/datasets", "DBP15k_full_zh_en_2")
-    main("/home/2022xuch/paris/datasets", "DBP15k_full_fr_en_2")
-    main("/home/2022xuch/paris/datasets", "DBP15k_full_ja_en_2")
+    main("/home/2022xuch/PNAL/datasets", "DBP15k_full_zh_en_2")
+    #main("/home/2022xuch/PNAL/datasets", "DBP15k_full_ja_en_2")
+    #main("/home/2022xuch/PNAL/datasets", "DBP15k_full_fr_en_2")

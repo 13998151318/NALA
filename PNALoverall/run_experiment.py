@@ -20,10 +20,12 @@ def run_pnal_experiment(dataset, dataset_division, table_setting = 5):
     out_folder = os.path.abspath(".").replace("\\", "/") + "/output" 
     if dataset[:3] == "D_W":
         dataset_type = "DW"
+    elif dataset[:3] == "D_Y":
+        dataset_type = "DY"
     else:
         dataset_type = "DBP"
-    kg1_file = "kg1.nt"
-    kg2_file = "kg2.nt"
+    kg1_file = dataset + "kg1.nt"
+    kg2_file = dataset + "kg2.nt"
     #table_setting = 5
     if table_setting == -1:
         zero_seed = False #False  #True
@@ -53,17 +55,17 @@ def run_pnal_experiment(dataset, dataset_division, table_setting = 5):
         zero_seed = True #False  #True
         no_attr = False
         _1v1 = True
-        if dataset_type == "DW":
-            _1v1 = False
+        #if dataset_type != "DBP":
+        #    _1v1 = False
     elif table_setting >= 6 and table_setting <= 11:
         zero_seed = True #False  #True
         no_attr = False
         _1v1 = True
-        if table_setting == 9 or dataset_type == "DW":
+        if table_setting == 9:# or dataset_type != "DBP"
             _1v1 = False
     if _1v1:
-        kg1_1v1_assumption = "kg1_1v1_assumption.nt"
-        kg2_1v1_assumption = "kg2_1v1_assumption.nt"
+        kg1_1v1_assumption = dataset + "kg1_1v1_assumption.nt"
+        kg2_1v1_assumption = dataset + "kg2_1v1_assumption.nt"
     else:
         kg1_1v1_assumption = None
         kg2_1v1_assumption = None
