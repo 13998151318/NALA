@@ -1,5 +1,5 @@
 # PNAL
-Source code for "P-NAL: a Simple, Effective and Interpretable Entity Alignment Method [Experiments, Datasets]"
+Source code for "NALA: an Effective and Interpretable Entity Alignment Method [Experiments, Datasets]"
 
 ## Source code references
 The source code for some parts of our method has been adapted from the corresponding repositories. 
