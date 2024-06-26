@@ -1117,7 +1117,7 @@ public class FactStore {
         TruthFunctions.set_setting(setting);
         TruthValue t[], temp; //t[0]表示从多条path选取的最终结果
         TruthValue p[]; //代表由某个path推出的最优y1 <-> y2的推理结果
-        double c = 0.5903684216027484;
+        double c = 0.6003087066251795;
         c = TruthFunctions.divide_confidence(c,2);
         D.p("c",c);
         c = TruthFunctions.divide_confidence(c,2);

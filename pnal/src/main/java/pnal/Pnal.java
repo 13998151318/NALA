@@ -1564,7 +1564,9 @@ public class Pnal {
                 divide_confidence_num = 2;
             else
                 divide_confidence_num = 3;
-            if (setting.bootsrtap == 0)
+            if (setting.bootsrtap == 0 && setting.table_setting == 3)
+                divide_confidence_num *= 4;
+            if (setting.bootsrtap == 1 && setting.table_setting == 3)
                 divide_confidence_num *= 2;
             //if (setting.table_setting == 3)
             //    divide_confidence_num *= 2;
