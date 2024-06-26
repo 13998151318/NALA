@@ -1,4 +1,4 @@
-# PNAL
+# NALA
 Source code for "NALA: an Effective and Interpretable Entity Alignment Method [Experiments, Datasets]"
 
 ## Source code references
