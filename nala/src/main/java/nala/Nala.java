@@ -35,6 +35,7 @@ import nala.nal.TruthValue;
 import nala.nal.Stamp;
 import nala.nal.AlignmentSentence;
 import nala.nal.TruthFunctions;
+import nala.Evaluation;
 
 
 import javatools.administrative.Announce;
@@ -114,7 +115,7 @@ public class Nala {
 
     public static int[] exemplars_2;
 
-    public static int run;
+    public static int iteration;
 
     //public static ArrayList<LinkedList<Pair<Integer, Float>>> entity_emb_sim_mat = new ArrayList<>(40000);
 
@@ -243,7 +244,7 @@ public class Nala {
 	 *  It reads the entities from the inputs queue, and writes its aggregated result on the target queue (and in equalities)
 	 */
 	private static class Mapper implements Runnable {
-		int run;
+		int iteration;
 		
 		EqualityStore equalities;
 		EqualityStoreMultiple equalitiesMultiple;
@@ -265,10 +266,10 @@ public class Nala {
 		IntSet visited2;
 		int limit;
 
-		public Mapper(int run, int id, FactStore factStore,
+		public Mapper(int iteration, int id, FactStore factStore,
 				EqualityStore equalities, EqualityStoreMultiple equalitiesMultiple, MapperOutput mapperOutput, Neighborhood relationGuide,
 				BlockingQueue<MapperOutput> target, ConcurrentLinkedQueue<Integer> inputs, int limit) {
-			this.run = run;
+			this.iteration = iteration;
 			this.equalities = equalities;
 			this.equalitiesMultiple = equalitiesMultiple;
 			this.target = target;
@@ -286,8 +287,8 @@ public class Nala {
 			this.relationGuide = relationGuide;
 			
 			if (setting.sampleEntities > 0) {
-				// don't do any joins during the few first runs
-				if (run < 2) {
+				// don't do any joins during the few first iterations
+				if (iteration < 2) {
 					localJoinLengthLimit1 = 1;
 					localJoinLengthLimit2 = 1;
 				}
@@ -370,14 +371,14 @@ public class Nala {
 //				JoinRelation nr2 = new JoinRelation(r2);
 				Neighborhood nn2 = null;
 				if (relationGuide == null) {
-					nn2 = newNeighborhood.getChild(run, r2bis);
+					nn2 = newNeighborhood.getChild(iteration, r2bis);
 				} else {
 					nn2 = newNeighborhood.getChildRO(r2bis);
 				}
 				if (nn2 == null) {
 					continue;
 				}
-				if (setting.interestingnessThreshold && run > 0) {
+				if (setting.interestingnessThreshold && iteration > 0) {
 					if (!nn2.worthTrying()) {
 						continue;
 					}
@@ -396,7 +397,7 @@ public class Nala {
 			// when using the one pass method, we must use the small initial weights for
 			// the two first iterations
 			// otherwise nothing can align
-			boolean isFirstRun = (run <= 1);
+			boolean isFirstiteration = (iteration <= 1);
 			
 //			if (!Config.treatIdAsRelation && fs2.getIdRel() != null
 //					&& r2.isSimpleRelation(-fs2.getIdRel().id))
@@ -409,7 +410,7 @@ public class Nala {
 
 			
 			if (subprop.getConfidence() < Config.THETA && superprop.getConfidence() < Config.THETA) {
-				if (isFirstRun) {
+				if (isFirstiteration) {
 					double val = Config.IOTA / (1 + Config.iotaDependenceOnLength * ((r1.length() - 1) + (r2.length() - 1)));
 					subprop.setConfidence(val);
 					superprop.setConfidence(val);
@@ -477,7 +478,7 @@ public class Nala {
 			// when using the one pass method, we must use the small initial weights for
 			// the two first iterations
 			// otherwise nothing can align
-			boolean isFirstRun = (run <= 1);
+			boolean isFirstIteration = (iteration <= 1);
             boolean attributive = false;
 			if (fs1.isLiteral(x1)){
                 attributive = true;
@@ -497,7 +498,7 @@ public class Nala {
                 if (r1_is_r2 != null)
                     r1_is_r2 = r1_is_r2.swapClone().setFrequency(1).divideConfidence(Config.epsilon);
                 if (r2_is_r1 == null) {
-                    if (isFirstRun) {
+                    if (isFirstIteration) {
                         double val = Config.IOTA;
                         //xch2.1 新增参数
                         //xch与paris-main不同之处14. subRelation IOTA的初始置信度
@@ -507,7 +508,7 @@ public class Nala {
                     }
                 }
                 if (r1_is_r2 == null) {
-                    if (isFirstRun) {
+                    if (isFirstIteration) {
                         double val = Config.IOTA;
                         //xch2.1 新增参数
                         r1_is_r2 = new TruthValue(1, val);
@@ -517,7 +518,7 @@ public class Nala {
                 }
                 //xch与paris-main不同之处15. subRelation获取后的过滤 getFrequency()
                 if (r2_is_r1.getConfidence() < Config.IOTA && r1_is_r2.getConfidence() < Config.IOTA) {
-                    if (isFirstRun) {
+                    if (isFirstIteration) {
                         double val = Config.IOTA;
                         r2_is_r1.setConfidence(val);
                         r1_is_r2.setConfidence(val);
@@ -531,7 +532,7 @@ public class Nala {
                 if (r1_is_r2 != null)
                     r1_is_r2 = r1_is_r2.clone().divideFrequency(Config.epsilon);
                 if (r2_is_r1 == null) {
-                    if (isFirstRun) {
+                    if (isFirstIteration) {
                         double val = Config.IOTA;
                         //xch2.1 新增参数
                         //xch与paris-main不同之处14. subRelation IOTA的初始置信度
@@ -541,7 +542,7 @@ public class Nala {
                     }
                 }
                 if (r1_is_r2 == null) {
-                    if (isFirstRun) {
+                    if (isFirstIteration) {
                         double val = Config.IOTA;
                         //xch2.1 新增参数
                         r1_is_r2 = new TruthValue(1, val);
@@ -551,7 +552,7 @@ public class Nala {
                 }
                 //xch与paris-main不同之处15. subRelation获取后的过滤 getFrequency()
                 if (r2_is_r1.getFrequency() < Config.IOTA && r1_is_r2.getFrequency() < Config.IOTA) {
-                    if (isFirstRun) {
+                    if (isFirstIteration) {
                         double val = Config.IOTA;
                         r2_is_r1.setFrequency(val);
                         r1_is_r2.setFrequency(val);
@@ -559,11 +560,11 @@ public class Nala {
                         return;
                 }
             }
-			if (!isFirstRun){
+			if (!isFirstIteration){
                 //r1_is_r2.increse_frequency_linearly(setting.increse_r1_is_r2_frequency * r1_is_r2.getExpectation());
                 //r2_is_r1.increse_frequency_linearly(setting.increse_r1_is_r2_frequency * r2_is_r1.getExpectation());
-                r1_is_r2.increse_frequency_linearly(setting, attributive);
-                r2_is_r1.increse_frequency_linearly(setting, attributive);
+                r1_is_r2.increse_frequency_linearly(attributive);
+                r2_is_r1.increse_frequency_linearly(attributive);
             }
 			
 			double fun1 = fs1.functionality(r1) / Config.epsilon;
@@ -677,13 +678,13 @@ public class Nala {
             //xch2.1:此处对于数值改动影响很小？
             //xch与paris-main不同之处17. 结论过滤
             //xch与paris-main不同之处18. rivision和存放证据
-            //if (run < 10){
+            //if (iteration < 10){
             if (t[0].getFrequency() > 0.01 && t[0].getConfidence() > 0.01) { // && t[0].getConfidence() > 0.02
                 if (temp_a_s_for_one_entity[fs2.id_big_to_small(y2)] == null){
                     temp_a_s_for_one_entity[fs2.id_big_to_small(y2)] = new AlignmentSentence(x_truth, y1, y2, t[0], true, fact_id_1, fact_id_2, x2, record_stamp_evidence);
                 }
                 else{
-                    temp_a_s_for_one_entity[fs2.id_big_to_small(y2)].probabilistic_add_evidence(x_truth, fact_id_1, fact_id_2, t[0], x2, record_stamp_evidence, setting.add_evidence_remove_duplicate, fs1.isLiteral(x1), run<setting.add_evidence_remove_duplicate_run, setting.use_c_as_probability_value);
+                    temp_a_s_for_one_entity[fs2.id_big_to_small(y2)].probabilistic_add_evidence(x_truth, fact_id_1, fact_id_2, t[0], x2, record_stamp_evidence, setting.add_evidence_remove_duplicate, fs1.isLiteral(x1), iteration<setting.add_evidence_remove_duplicate_iteration, setting.use_c_as_probability_value);
                 }
             }
             //}
@@ -694,7 +695,7 @@ public class Nala {
                         temp_a_s_for_one_entity[fs2.id_big_to_small(y2)] = new AlignmentSentence(x_truth, y1, y2, t[0], true, fact_id_1, fact_id_2, x2, record_stamp_evidence);
                     }
                     else{
-                        temp_a_s_for_one_entity[fs2.id_big_to_small(y2)].probabilistic_add_evidence(x_truth, fact_id_1, fact_id_2, t[0], x2, record_stamp_evidence, setting.add_evidence_remove_duplicate, fs1.isLiteral(x1), run<setting.add_evidence_remove_duplicate_run, setting.use_c_as_probability_value);
+                        temp_a_s_for_one_entity[fs2.id_big_to_small(y2)].probabilistic_add_evidence(x_truth, fact_id_1, fact_id_2, t[0], x2, record_stamp_evidence, setting.add_evidence_remove_duplicate, fs1.isLiteral(x1), iteration<setting.add_evidence_remove_duplicate_iteration, setting.use_c_as_probability_value);
                     }
                 }
             } */
@@ -707,7 +708,7 @@ public class Nala {
 				int x1, JoinRelation r1, int y1) {
 
 			if (localDebug) {
-				Announce.debug("run", run, "findEqualsOfFact:", fs1.entity(x1),
+				Announce.debug("iteration", iteration, "findEqualsOfFact:", fs1.entity(x1),
 					r1.toString(), fs1.entity(y1));
 			}
 			
@@ -752,8 +753,8 @@ public class Nala {
 					int ny2 = facts.get(i).object;
 					Neighborhood n2 = oldNeighborhood == null ? null : oldNeighborhood.getChildRO(r2bis);
 					JoinRelation nr2 = new JoinRelation(fs2, r2bis);
-					Neighborhood nn2 = neighborhood.getChild(run, r2bis);
-					if (setting.interestingnessThreshold && run > 0) {
+					Neighborhood nn2 = neighborhood.getChild(iteration, r2bis);
+					if (setting.interestingnessThreshold && iteration > 0) {
 						if (!nn2.worthTrying()) {
 							continue;
 						}
@@ -800,7 +801,7 @@ public class Nala {
 				JoinRelation nr1 = new JoinRelation(r1);
 				nr1.reverseDirection();
 				if (mapperOutput.neighborhoods[nr1.code()] == null) {
-					mapperOutput.neighborhoods[nr1.code()] = new HashArrayNeighborhood(fs2, run, true, Math.min(fs2.getJoinLengthLimit(), setting.sumJoinLengthLimit - nr1.length()));
+					mapperOutput.neighborhoods[nr1.code()] = new HashArrayNeighborhood(fs2, iteration, true, Math.min(fs2.getJoinLengthLimit(), setting.sumJoinLengthLimit - nr1.length()));
 				}
 				findEqualsOfFact(mapperOutput.relationNormalizer,
 						mapperOutput.neighborhoods[nr1.code()], x1, nr1,
@@ -817,8 +818,8 @@ public class Nala {
 				return;
 			if (relationGuide != null && (rg == null || rg.isEmpty()))
 				return;
-			// we don't consider joins on the first ontology before the second run
-			if (run == 0)
+			// we don't consider joins on the first ontology before the second iteration
+			if (iteration == 0)
 				return;
 			
 			List<PredicateAndObject> facts = fs1.factsAbout(x1); 
@@ -847,7 +848,7 @@ public class Nala {
 			equalityProduct.clear();
 			fullEqualityProduct.clear();
 
-			Announce.debug("run", run, "findEqualsOf:", fs1.entity(y1), "");
+			Announce.debug("iteration", iteration, "findEqualsOf:", fs1.entity(y1), "");
 			//HashSet<Pair<Integer, Integer>> visited = new HashSet<Pair<Integer, Integer>>();
 			visited1.clear();
 			// call exploreFirstOntology for all fact about y1
@@ -881,8 +882,8 @@ public class Nala {
 			//TruthValue max = new TruthValue(0,0);
             double max = 0;
 			int key = -1;
-			//xch1 这个版本的1对一假设处理只在run==9时处理
-			if (fs1.has_1v1_assumption && fs2.has_1v1_assumption){ // && run == setting.last_run
+			//xch1 这个版本的1对一假设处理只在iteration==9时处理
+			if (fs1.has_1v1_assumption && fs2.has_1v1_assumption){ // && iteration == setting.last_iteration
                 for (int y2 = 0; y2 < fs2.num_proper_entities(); y2++) {
                     if (temp_a_s_for_one_entity[y2] == null)
                         continue;
@@ -962,7 +963,7 @@ public class Nala {
 				  continue;
 				
 				if (mapperOutput.neighborhoods[r1bis] == null) {
-					mapperOutput.neighborhoods[r1bis] = new HashArrayNeighborhood(fs2, run, true, Math.min(fs2.getJoinLengthLimit(), setting.sumJoinLengthLimit - 1));
+					mapperOutput.neighborhoods[r1bis] = new HashArrayNeighborhood(fs2, iteration, true, Math.min(fs2.getJoinLengthLimit(), setting.sumJoinLengthLimit - 1));
 				}
 				Neighborhood currentNeighborhood = mapperOutput.neighborhoods[r1bis];
 
@@ -1013,7 +1014,7 @@ public class Nala {
                         //xch与paris-main不同之处11. 实体无该对齐时：0. TruthValue(0, unaligned_entity_equal_initial_confidence)
 						TruthValue yeqv = computed.equality(fs1, y1, ny2);
 						int r2bis = facts2.get(j).predicate;
-						Neighborhood nn2 = currentNeighborhood.getChild(run, r2bis);
+						Neighborhood nn2 = currentNeighborhood.getChild(iteration, r2bis);
                         //xch2.1  加以下代码使得第一轮关系继承数21w缩减为2w   35%->40%  THETA*3 ->45%
                         //xch与paris-main不同之处12. ny2 register关系是否有过滤
                         if (setting.use_path_3 && xeqv.getFrequency() > 0 && xeqv.getConfidence() > 0 && yeqv.getFrequency() > 0 && yeqv.getConfidence() > 0){
@@ -1154,7 +1155,7 @@ public class Nala {
                     }
                 }
             }
-            if (equalities != null&&setting.entity_clustering&&run>=setting.entity_clustering_run){
+            if (equalities != null&&setting.entity_clustering&&iteration>=setting.entity_clustering_iteration){
                 //small ids
                 int y1c, y2c, y2, y1_small;
                 TruthValue t[];
@@ -1265,7 +1266,7 @@ public class Nala {
 					}
 				}
 			}
-			Announce.message("run", run, nManaged, "actually managed");
+			Announce.message("iteration", iteration, nManaged, "actually managed");
 			return mapperOutput;
 		}
 
@@ -1275,8 +1276,8 @@ public class Nala {
 	}
 
     public static void reduce_to_1v1_range_assumption(int y1, AlignmentSentence temp_a_s_for_one_entity[], FactStore fs1, FactStore fs2) {
-        //xch1 这个版本的1对一假设处理只在run==9时处理
-        if (fs1.has_1v1_assumption && fs2.has_1v1_assumption){ // && run == setting.last_run
+        //xch1 这个版本的1对一假设处理只在iteration==9时处理
+        if (fs1.has_1v1_assumption && fs2.has_1v1_assumption){ // && iteration == setting.last_iteration
             for (int y2 = 0; y2 < fs2.num_proper_entities(); y2++) {
                 if (temp_a_s_for_one_entity[y2] == null)
                     continue;
@@ -1295,7 +1296,7 @@ public class Nala {
     }
 
 	/** limit the mapperOutput to interesting alignments and return the relation guide */
-	public static Neighborhood endSampling(int run, MapperOutput mapperOutput) {
+	public static Neighborhood endSampling(int iteration, MapperOutput mapperOutput) {
 	//the current relation normalizer and neighborhoods are the results of exploring without constraints
 		Announce.message("End of the sampling phase!");
 		if (setting.printNeighborhoodsSampling) {
@@ -1319,7 +1320,7 @@ public class Nala {
 				Neighborhood cn = relationGuide;
 				for (int j = 0; j < jr.length(); j++) {
 					assert(jr.get(j) <= mapperOutput.fs.maxRelationId());
-					cn = cn.getChild(run, jr.get(j));
+					cn = cn.getChild(iteration, jr.get(j));
 				}
 				// cn is now the neighborhood representing the join relation i
 				// we don't care about the value that it carries, just that it exists
@@ -1336,7 +1337,7 @@ public class Nala {
 		return relationGuide;
 	}
 	
-	public static MapperOutput aggregateThreads(int run, FactStore factStore, EqualityStore equalities, EqualityStoreMultiple equalitiesMultiple, MapperOutput mapperOutput,
+	public static MapperOutput aggregateThreads(int iteration, FactStore factStore, EqualityStore equalities, EqualityStoreMultiple equalitiesMultiple, MapperOutput mapperOutput,
 			Neighborhood relationGuide, ConcurrentLinkedQueue<Integer> inputs, int limit) throws InterruptedException {
 		Announce.message("Spawning", setting.nThreads, "threads");
 		LinkedList<Thread> threads = new LinkedList<Thread>();
@@ -1351,7 +1352,7 @@ public class Nala {
 	  		myMapperOutput.scaleDown(setting.nThreads);
 	  	}
 	  	
-	    Mapper mapper = new Mapper(run, i, factStore, equalities, equalitiesMultiple, myMapperOutput, relationGuide, results, inputs, limit);
+	    Mapper mapper = new Mapper(iteration, i, factStore, equalities, equalitiesMultiple, myMapperOutput, relationGuide, results, inputs, limit);
 	    Thread thread = new Thread(mapper);
 	    threads.add(thread);
 		  thread.start();
@@ -1375,7 +1376,7 @@ public class Nala {
 	/** Perfom the alignment of one factStore against the other
 	 *  equality (initialized by caller) is where entity alignments are stored
 	 *  the relation alignment is returned as a MapperOutput */
-	public static MapperOutput oneIterationOneWay(int run,
+	public static MapperOutput oneIterationOneWay(int iteration,
 			FactStore factStore, EqualityStore equalities, EqualityStoreMultiple equalitiesMultiple) throws InterruptedException {
 		
 		MapperOutput mapperOutput = null;
@@ -1396,9 +1397,9 @@ public class Nala {
 			inputs.add(e1);
 			nAdded++;
 		}
-		Announce.message("run", run, nAdded, "added to queue");
+		Announce.message("iteration", iteration, nAdded, "added to queue");
 	
-		int limit = run >= 2 && setting.sampleEntities > 0 ? setting.sampleEntities : 0;
+		int limit = iteration >= 2 && setting.sampleEntities > 0 ? setting.sampleEntities : 0;
 		int tempNThreads = 0;
 		if (limit > 0 && setting.debugSampling) {
 			Announce.setLevel(Level.DEBUG);
@@ -1408,17 +1409,17 @@ public class Nala {
 		}
 		if (setting.nThreads == 1) {
 			// perform the computation directly
-			Mapper mapper = new Mapper(run, -1, factStore, equalities, equalitiesMultiple, new MapperOutput(factStore), null, null, inputs, limit);
+			Mapper mapper = new Mapper(iteration, -1, factStore, equalities, equalitiesMultiple, new MapperOutput(factStore), null, null, inputs, limit);
 			mapperOutput = mapper.findEqualsOfQueue();
 		} else {
 			// spawn threads to perform the computation
 			Announce.message("Will manage", nAdded, "entities");
-			mapperOutput = aggregateThreads(run, factStore, equalities, equalitiesMultiple, null, null, inputs, limit);
+			mapperOutput = aggregateThreads(iteration, factStore, equalities, equalitiesMultiple, null, null, inputs, limit);
 		}
 		
 		if (limit > 0) {
 			Announce.message("Will end sampling");
-			Neighborhood relationGuide = endSampling(run, mapperOutput);
+			Neighborhood relationGuide = endSampling(iteration, mapperOutput);
 			Announce.message("Will manage the rest now that sampling is done");
 			if (setting.debugSampling) {
 				Announce.setLevel(Level.MESSAGES);
@@ -1426,10 +1427,10 @@ public class Nala {
 				setting.nThreads = tempNThreads;
 			}
 			if (setting.nThreads == 1) {
-				Mapper mapper2 = new Mapper(run, -1, factStore, equalities, equalitiesMultiple, mapperOutput, relationGuide, null, inputs, 0);
+				Mapper mapper2 = new Mapper(iteration, -1, factStore, equalities, equalitiesMultiple, mapperOutput, relationGuide, null, inputs, 0);
 				mapperOutput = mapper2.findEqualsOfQueue();
 			} else {
-				mapperOutput = aggregateThreads(run, factStore, equalities, equalitiesMultiple, mapperOutput, relationGuide, inputs, 0);
+				mapperOutput = aggregateThreads(iteration, factStore, equalities, equalitiesMultiple, mapperOutput, relationGuide, inputs, 0);
 			}
 			
 			Announce.done();
@@ -1450,9 +1451,9 @@ public class Nala {
         
         //xch与paris-main不同之处4.EqualityStore存放多个对齐
 		//equalities1 is the pending equality and computed.equalityStore is the old one from the last Iteration
-		EqualityStore equalities1 = new EqualityStore(factStore1, factStore2, setting, run);
-        //if((run >= 0 && run <= setting.display_evidence_run_small)||(run >= setting.display_evidence_run_big)||(run >= setting.add_evidence_remove_duplicate_run-1 && run <= setting.add_evidence_remove_duplicate_run+1))
-        if(run >= setting.display_evidence_run_big)
+		EqualityStore equalities1 = new EqualityStore(factStore1, factStore2, setting, iteration);
+        //if((iteration >= 0 && iteration <= setting.display_evidence_iteration_small)||(iteration >= setting.display_evidence_iteration_big)||(iteration >= setting.add_evidence_remove_duplicate_iteration-1 && iteration <= setting.add_evidence_remove_duplicate_iteration+1))
+        if(iteration >= setting.display_evidence_iteration_big)
             display_evidence = true;
         else
             display_evidence = false;
@@ -1465,24 +1466,24 @@ public class Nala {
 			Announce.done();
 		}
         if (setting.entity_clustering) {
-            if (run == 0){
+            if (iteration == 0){
                 entity_clustering(factStore1, intensional_similarity_1, exemplar_view_1, exemplars_1);
                 entity_clustering(factStore2, intensional_similarity_2, exemplar_view_2, exemplars_2);
             }
-            if (run>=setting.entity_clustering_run)
+            if (iteration>=setting.entity_clustering_iteration)
                 type_8_path();
         }
 		MapperOutput mapperOutput1 = null;
 		MapperOutput mapperOutput2 = null;
 
 		/** We do the computation on the ontologies */
-		mapperOutput1 = oneIterationOneWay(run, factStore1, equalities1, equalitiesMultiple);
+		mapperOutput1 = oneIterationOneWay(iteration, factStore1, equalities1, equalitiesMultiple);
         equalities1.temp_alignment_proper_id = new HashMap<>();
         equalities1.temp_alignment_proper_id_sentences = new HashMap<>();
 		if (setting.cleverMatching)
 			equalities1 = equalitiesMultiple.takeMaxMaxClever();
         if (display_evidence){
-		    equalities1.dump_eqv_full(new File(setting.tsvFolder, run + "_eqv_full.tsv"), 20, false, 4000);
+		    equalities1.dump_eqv_full(new File(setting.tsvFolder, iteration + "_eqv_full.tsv"), 20, false, 4000);
         }
         if (setting.matching_strategy == 0){
             equalities1.populate_right_to_left();
@@ -1498,7 +1499,7 @@ public class Nala {
             equalities1.lapjv();
         }
         else if (setting.matching_strategy == 4){
-            if(run == setting.last_run){
+            if(iteration == setting.last_iteration){
                 equalities1.lapjv();
             }
             else{
@@ -1512,14 +1513,14 @@ public class Nala {
         }
 		
         if (setting.matching_strategy <= 4){
-            equalities1.dump_eqv_full(new File(setting.tsvFolder, run + "_eqv.tsv"), 1, false);
+            equalities1.dump_eqv_full(new File(setting.tsvFolder, iteration + "_eqv.tsv"), 1, false);
         }
         else{
-            equalities1.dump_eqv_full(new File(setting.tsvFolder, run + "_eqv.tsv"), 1, true);
+            equalities1.dump_eqv_full(new File(setting.tsvFolder, iteration + "_eqv.tsv"), 1, true);
         }
         
         if (display_evidence){
-            equalities1.dump_eqv_full(new File(setting.tsvFolder, run + "_eqv_reverse.tsv"), 1, false, false, -1);
+            equalities1.dump_eqv_full(new File(setting.tsvFolder, iteration + "_eqv_reverse.tsv"), 1, false, false, -1);
         }
 		
         /*for (int i : equalities1.alignment_sentences_fs1_To_fs2.keySet()) {
@@ -1539,13 +1540,13 @@ public class Nala {
                 D.p(a.toString());
             }
         }*/
-        //equalities1.dump(new File(setting.tsvFolder, run + "_eqv.tsv"));
+        //equalities1.dump(new File(setting.tsvFolder, iteration + "_eqv.tsv"));
 		if (setting.bothWays) {
-			mapperOutput2 = oneIterationOneWay(run, factStore2, null, null);
+			mapperOutput2 = oneIterationOneWay(iteration, factStore2, null, null);
 		}
 		//xch2.0  display_evidence
         if (display_evidence){
-            equalities1.setTSVfile(new File(setting.tsvFolder, run + "_evidences.tsv"));
+            equalities1.setTSVfile(new File(setting.tsvFolder, iteration + "_evidences.tsv"));
             try {
 				equalities1.display_all_evidences(computed, true);
 			} catch (IOException e) {}
@@ -1556,7 +1557,7 @@ public class Nala {
 		computed.mapperOutput2 = mapperOutput2;
 
 		computed.equalityStore = equalities1;
-        if ((setting.use_entity_emb_sim || setting.use_translate_emb) && setting.adaptive_entity_emb_sim_confidence && computed.avg_sim_confidence == 0 && run == 4){
+        if ((setting.use_entity_emb_sim || setting.use_translate_emb) && setting.adaptive_entity_emb_sim_confidence && computed.avg_sim_confidence == 0 && iteration == 4){
             double avg_sim_confidence = computed.compute_avg_sim_confidence();
             computed = new Result(setting, factStore1, factStore2, setting.tsvFolder, value_to_id, id_to_value);
             int divide_confidence_num;
@@ -1571,7 +1572,7 @@ public class Nala {
             //if (setting.table_setting == 3)
             //    divide_confidence_num *= 2;
             computed.avg_sim_confidence = TruthFunctions.divide_confidence(avg_sim_confidence, divide_confidence_num);
-            run = -1;
+            iteration = -1;
             Announce.message("done avg_sim_confidence: ", avg_sim_confidence);
             Announce.message("divide_confidence_num: ", divide_confidence_num);
             Announce.message("done divide_confidence(): ", computed.avg_sim_confidence);
@@ -1591,11 +1592,11 @@ public class Nala {
         if (display_evidence ){ //|| true
             /** Write the alignments */
             if (setting.bothWays) {
-                //equalities2.dump(new File(setting.tsvFolder, run + "_eqv2.tsv"));
-                computed.superRelationsOf2.dump(new File(setting.tsvFolder, run
+                //equalities2.dump(new File(setting.tsvFolder, iteration + "_eqv2.tsv"));
+                computed.superRelationsOf2.dump(new File(setting.tsvFolder, iteration
                         + "_superrelations2.tsv"));
             }
-            computed.superRelationsOf1.dump(new File(setting.tsvFolder, run
+            computed.superRelationsOf1.dump(new File(setting.tsvFolder, iteration
                     + "_superrelations1.tsv"));
         }
 		if (setting.printNeighborhoodsSampling)
@@ -1781,8 +1782,8 @@ public class Nala {
                 exemplar_view.get(exemplar).add(i);
             }
         }
-        if (run<display){
-            w = new BufferedWriter(new FileWriter(new File(setting.tsvFolder, run + "_exemplars_file_fs" + fs_pointer.fs_id + "_1.tsv")));
+        if (iteration<display){
+            w = new BufferedWriter(new FileWriter(new File(setting.tsvFolder, iteration + "_exemplars_file_fs" + fs_pointer.fs_id + "_1.tsv")));
             for (int i = 0; i < fs_pointer.num_proper_entities(); i++){
                 exemplar = exemplars[i];
                 if(exemplar<0){
@@ -1792,7 +1793,7 @@ public class Nala {
                     w.write(fs_pointer.proper_entity_s(i) + "    " + fs_pointer.proper_entity_s(exemplar) + "\n");
             }
             w.close();
-            w = new BufferedWriter(new FileWriter(new File(setting.tsvFolder, run + "_exemplars_file_fs" + fs_pointer.fs_id + "_2.tsv")));
+            w = new BufferedWriter(new FileWriter(new File(setting.tsvFolder, iteration + "_exemplars_file_fs" + fs_pointer.fs_id + "_2.tsv")));
             w.write("exemplar_view.keySet().size(): " + exemplar_view.keySet().size() + "\n");
             for (int i:exemplar_view.keySet()){
                 exemplar = i;
@@ -1886,8 +1887,8 @@ public class Nala {
         int exemplar;
         int display = 1;
         BufferedWriter w;
-        if (run<5 && display==1){
-            w = new BufferedWriter(new FileWriter(new File(setting.tsvFolder, run + "_alignment_sentences_of_classes.tsv")));
+        if (iteration<5 && display==1){
+            w = new BufferedWriter(new FileWriter(new File(setting.tsvFolder, iteration + "_alignment_sentences_of_classes.tsv")));
             for (int i:alignment_sentences_of_classes.keySet()){
                 for (int j:alignment_sentences_of_classes.get(i).keySet()){
                     w.write(alignment_sentences_of_classes.get(i).get(j).display(factStore1, factStore2) + "\n");
@@ -2334,7 +2335,7 @@ public class Nala {
 		}
 		
 		if (args.length == 2) {
-	    setting = new Setting("", "", "", "", "", "", null);
+	    setting = new Setting("", "", "", "", "", "");
 			dumpFactStoreEntities(new File(args[0]), args[1]);
 			System.exit(0);
 		}
@@ -2342,7 +2343,7 @@ public class Nala {
 		Announce.doing("Starting PARIS");
 		if (args.length == 3) {
 			Announce.message("Settings specified on command line");
-	    setting = new Setting("", ".", args[0], args[1], null, args[2], null);
+	    setting = new Setting("", ".", args[0], args[1], null, args[2]);
 		} else {
 			Announce.message("Settings:", args[0]);
 			setting = new Setting(new File(args[0]));			
@@ -2381,8 +2382,8 @@ public class Nala {
         
 		long startTime = System.currentTimeMillis();
         
-		TruthValue.set_TRUTH_EPSILON(setting.TRUTH_EPSILON);
-        TruthFunctions.set_setting(setting);
+        TruthValue.set_setting(setting.use_c_as_probability_value, setting.increse_attribute_frequency, setting.increse_relation_frequency, setting.TRUTH_EPSILON);
+        TruthFunctions.set_setting(setting.all_revision, setting.all_prob_revision);
 		Announce.doing("Loading fact stores (could take a long time...)");
 		//xch1如果Setting（比如通过paris.ini文件构建的）中没有一对一假设文件路径，则认为左右图谱无一对一假设
         //xch与paris-main不同之处1.1v1_assumption
@@ -2434,8 +2435,8 @@ public class Nala {
         exemplars_1 = new int[factStore1.num_proper_entities()];
         exemplars_2 = new int[factStore2.num_proper_entities()];
         //todo:refresh exemplar_view
-		for (run = 0; run < setting.endIteration; run++) {
-			Announce.message("@TIME run=", run," ", System.currentTimeMillis() / 1000L);
+		for (iteration = 0; iteration < setting.endIteration; iteration++) {
+			Announce.message("@TIME iteration=", iteration," ", System.currentTimeMillis() / 1000L);
 			// note that we don't check anymore if something has changed...
 
 			// xch注释 主入口！！！

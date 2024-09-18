@@ -122,6 +122,7 @@ bak\pcj\map\ShortKeyDoubleChainedHashMap$KeySet$1.class
 bak\pcj\UnmodifiableDoubleCollection.class
 bak\pcj\map\ByteKeyShortMapIterator.class
 bak\pcj\adapter\MapToBooleanKeyLongMapAdapter$1.class
+nala\Evaluation.class
 bak\pcj\hash\DoubleHashFunction.class
 bak\pcj\adapter\MapToShortKeyLongMapAdapter.class
 bak\pcj\benchmark\IntAdaptedArrayListBenchmark$1.class
@@ -168,7 +169,6 @@ nala\RelationNormalizer.class
 bak\pcj\map\ByteKeyCharChainedHashMap$1.class
 bak\pcj\set\AbstractCharSet.class
 bak\pcj\adapter\MapToShortKeyDoubleMapAdapter$1.class
-nala\evaluation\Evaluation.class
 bak\pcj\adapter\DoubleKeyIntMapToMapAdapter.class
 bak\pcj\set\ShortRangeSet$1.class
 bak\pcj\adapter\ByteKeyIntMapToMapAdapter$EntrySet$1.class
@@ -540,7 +540,6 @@ javatools\parsers\Char.class
 bak\pcj\map\BooleanKeyMap.class
 bak\pcj\map\IntKeyByteChainedHashMap$1.class
 bak\pcj\map\LongKeyLongOpenHashMap$KeySet$1.class
-nala\evaluation\GoldStandard$EvalVal.class
 bak\pcj\LongComparator.class
 bak\pcj\adapter\MapToShortKeyMapAdapter.class
 bak\pcj\map\CharKeyDoubleChainedHashMap$KeySet$1.class
@@ -656,7 +655,6 @@ bak\pcj\map\ShortKeyLongOpenHashMap$KeySet.class
 bak\pcj\map\ByteKeyBooleanChainedHashMap$1.class
 bak\pcj\set\UnmodifiableFloatSet.class
 bak\pcj\map\FloatKeyFloatOpenHashMap$KeySet$1.class
-nala\evaluation\Evaluation$1.class
 bak\pcj\benchmark\IntBitSetBenchmark.class
 bak\pcj\map\ShortKeyLongChainedHashMap$ValueCollection$1.class
 bak\pcj\list\LongArrayList.class
@@ -816,7 +814,6 @@ bak\pcj\map\DoubleKeyLongChainedHashMap$ValueCollection$1.class
 bak\pcj\adapter\SortedSetToByteSortedSetAdapter.class
 bak\pcj\list\DoubleList.class
 bak\pcj\adapter\MapToFloatKeyLongMapAdapter.class
-nala\evaluation\RemoveDupsFromOutput.class
 bak\pcj\adapter\SetToCharSetAdapter.class
 bak\pcj\adapter\CharKeyShortMapToMapAdapter.class
 javatools\administrative\D.class
@@ -1000,6 +997,7 @@ bak\pcj\adapter\MapToObjectKeyFloatMapAdapter.class
 bak\pcj\list\BooleanArrayDeque.class
 bak\pcj\map\ObjectKeyByteChainedHashMap$KeySet$1.class
 javatools\datatypes\IntSet$1.class
+nala\Evaluation$PieceOfAlignment.class
 bak\pcj\map\DoubleKeyDoubleChainedHashMap$KeySet$1.class
 bak\pcj\adapter\ObjectKeyIntMapToMapAdapter$EntrySet$1.class
 bak\pcj\adapter\ShortKeyByteMapToMapAdapter$EntrySet.class
@@ -1100,7 +1098,6 @@ bak\pcj\map\ShortKeyDoubleOpenHashMap$KeySet.class
 bak\pcj\list\FloatArrayDeque.class
 bak\pcj\adapter\BooleanKeyShortMapToMapAdapter.class
 bak\pcj\map\CharKeyShortOpenHashMap.class
-nala\evaluation\SampleClasses.class
 bak\pcj\map\FloatKeyIntChainedHashMap$ValueCollection.class
 bak\pcj\adapter\MapToIntKeyLongMapAdapter$1.class
 bak\pcj\map\ObjectKeyIntChainedHashMap$Entry.class
@@ -1215,7 +1212,6 @@ bak\pcj\map\LongKeyCharChainedHashMap$KeySet.class
 javatools\parsers\RegularExpression$RegExState.class
 bak\pcj\adapter\MapToObjectKeyCharMapAdapter.class
 javatools\datatypes\SparseVector.class
-nala\evaluation\GoldStandard.class
 bak\pcj\adapter\ByteListIteratorToListIteratorAdapter.class
 bak\pcj\map\ObjectKeyIntOpenHashMap$ValueCollection.class
 bak\pcj\adapter\ByteKeyShortMapToMapAdapter$Entry.class
@@ -1256,7 +1252,6 @@ bak\pcj\map\FloatKeyChainedHashMap$ValueCollection$1.class
 bak\pcj\adapter\ShortKeyIntMapToMapAdapter.class
 bak\pcj\map\CharKeyShortOpenHashMap$ValueCollection.class
 bak\pcj\map\LongKeyFloatChainedHashMap$KeySet$1.class
-nala\evaluation\GoldImdbYago.class
 bak\pcj\adapter\ListIteratorToLongListIteratorAdapter.class
 bak\pcj\adapter\MapToFloatKeyIntMapAdapter$1.class
 bak\pcj\adapter\IntKeyCharMapToMapAdapter$EntrySet.class
@@ -1349,7 +1344,6 @@ bak\pcj\map\ByteKeyDoubleChainedHashMap$ValueCollection.class
 bak\pcj\map\ShortKeyLongChainedHashMap.class
 bak\pcj\map\FloatKeyByteChainedHashMap$Entry.class
 bak\pcj\map\ShortKeyFloatChainedHashMap$Entry.class
-nala\evaluation\SampleClasses$1.class
 bak\pcj\UnmodifiableShortCollection.class
 nala\shingling\HashTable.class
 bak\pcj\map\IntKeyLongOpenHashMap$1.class
@@ -1918,7 +1912,6 @@ bak\pcj\list\IntArrayDeque.class
 bak\pcj\hash\DefaultFloatHashFunction.class
 bak\pcj\map\IntKeyDoubleOpenHashMap$KeySet$1.class
 bak\pcj\map\ShortKeyIntChainedHashMap$KeySet.class
-nala\evaluation\Evaluation$IterationResults.class
 bak\pcj\map\ByteKeyChainedHashMap$KeySet$1.class
 bak\pcj\map\DoubleKeyOpenHashMap$ValueCollection.class
 javatools\datatypes\Trie.class

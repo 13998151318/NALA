@@ -6,8 +6,6 @@ import java.io.IOException;
 import javatools.administrative.Announce;
 import javatools.administrative.Parameters;
 import javatools.filehandlers.FileSet;
-import nala.evaluation.GoldImdbYago;
-import nala.evaluation.GoldStandard;
 
 
 /** This class is part of the PARIS ontology matching project at INRIA Saclay/France.
@@ -18,181 +16,184 @@ import nala.evaluation.GoldStandard;
  *
  * This class holds a setting of two ontologies.*/
 public class Setting {
-  /** Folder where the computed equalities shall be stored*/
-  public final File home;
-  /** First ontology*/
-  public final File ontology1;
-  /** Third ontology. Just kidding. It's the second, of course...*/
-  public final File ontology2;
-  public File factstore1_1v1_assumption = null;
-  public File factstore2_1v1_assumption = null;
-  // there used to be several possible choices for types, now only one remains
-  /** Type of the first ontology */
-  public final String ontologyType1 = "memory";
-  /** Type of the third ontology */
-  public final String ontologyType2 = "memory";
-  /** Folder where the TSV files shall be output*/
-  public final File tsvFolder;
-  /** Gold standard for evaluation*/
-  public final GoldStandard gold;
-  /** Name of the setting*/
-  public final String name;
-  /** End iteration*/
-  public int endIteration;
-  public int last_run;
-  /** number of threads */
-  public int nThreads;
-  /** join length limit */
-  public int joinLengthLimit;
-  /** should we align both ways? */
-  public boolean bothWays;
-  /** should we takeMax? */
-  public boolean takeMax;
-  /** should we takeMaxMax? */
-  public boolean takeMaxMax;
-  /** do last pass with n best */
-  public int lastPassThreshold;
-  /** do we use interestingness thresholds on neighborhoods */
-  public boolean interestingnessThreshold;
-  /** do we use the new equality propagation formula */
-  public boolean useNewEqualityProduct;
-  /** should we use dense relation alignments */
-  public boolean matrixSubRelationStores;
-  /** Normalize strings to lowercase letters and numbers when loading RDF/N3 triples into the FactStore. 
-   * Switch this on BEFORE YOU GENERATE THE ONTOLOGIES, if the ontologies that you want to match contain names and
-   * strings in slight variations (Berlin=berlin). Default is FALSE.*/
-  public boolean normalizeStrings = false;
-  /** Normalize dates to the years. . 
-   * Switch this on BEFORE YOU GENERATE THE ONTOLOGIES, if the ontologies that you want to match contain dates on one side
-   * and years on the other side. Default is FALSE.*/
-  public boolean normalizeDatesToYears = false;
-  /** size of k-grams to index */
-  public int shinglingSize;
-  /** number of hash functions */
-  public int shinglingFunctions;
-  /** hash table size */
-  public int shinglingTableSize = 10485760;
-  //public static int shinglingTableSize = 65536;
-  /** precompute shinglings */
-  public boolean precomputeShinglings = false;
-  /** divide approximate literal matches by this value (hacky) */
-  public double penalizeApproxMatches;
-  /** no approximate literal matches if an exact match exists */
-  public boolean noApproxIfExact = true;
-  /** parallelize the loading of each fact store */
-  public boolean parallelFileLoad;
-  /** number of threads for the shingling precomputation */
-  public int shinglingThreads;
-  /** if nonempty, print debug information for entities matching this string */
-  public String debugEntity;
-  /** report progress every time that many entities have been dealt with */
-  public int reportInterval;
-  /** number of entities on which we should search for join relation alignments at each iteration */
-  public int sampleEntities;
-  /** shuffle entities at each run */
-  public boolean shuffleEntities;
-  public double smoothNumerator;
-  public double smoothDenominator;
-  public double smoothNumeratorSampling;
-  public double smoothDenominatorSampling;
-  public boolean cleverMatching;
-  public int sumJoinLengthLimit;
-  public double postLiteralDistanceThreshold;
-  public boolean shinglingSquare;
-  public boolean allowLoops;
-  public boolean printNeighborhoodsSampling;
-  
-  /** Use a special optimized findEqualsOf when no joins are made */
-  public boolean optimizeNoJoins;
-  
-  public boolean debugSampling;
+    /** Folder where the computed equalities shall be stored*/
+    public final File home;
+    public final File output_evaluate_path;
+    /** First ontology*/
+    public final File ontology1;
+    /** Third ontology. Just kidding. It's the second, of course...*/
+    public final File ontology2;
+    public File factstore1_1v1_assumption = null;
+    public File factstore2_1v1_assumption = null;
+    public File train;
+    public File valid;
+    public File test;
+    public boolean zero_seed;
+    // there used to be several possible choices for types, now only one remains
+    /** Type of the first ontology */
+    public final String ontologyType1 = "memory";
+    /** Type of the third ontology */
+    public final String ontologyType2 = "memory";
+    /** Folder where the TSV files shall be output*/
+    public final File tsvFolder;
+    /** Name of the setting*/
+    public final String name;
+    /** End iteration*/
+    public int endIteration;
+    public int last_iteration;
+    /** number of threads */
+    public int nThreads;
+    /** join length limit */
+    public int joinLengthLimit;
+    /** should we align both ways? */
+    public boolean bothWays;
+    /** should we takeMax? */
+    public boolean takeMax;
+    /** should we takeMaxMax? */
+    public boolean takeMaxMax;
+    /** do last pass with n best */
+    public int lastPassThreshold;
+    /** do we use interestingness thresholds on neighborhoods */
+    public boolean interestingnessThreshold;
+    /** do we use the new equality propagation formula */
+    public boolean useNewEqualityProduct;
+    /** should we use dense relation alignments */
+    public boolean matrixSubRelationStores;
+    /** Normalize strings to lowercase letters and numbers when loading RDF/N3 triples into the FactStore. 
+     * Switch this on BEFORE YOU GENERATE THE ONTOLOGIES, if the ontologies that you want to match contain names and
+     * strings in slight variations (Berlin=berlin). Default is FALSE.*/
+    public boolean normalizeStrings = false;
+    /** Normalize dates to the years. . 
+     * Switch this on BEFORE YOU GENERATE THE ONTOLOGIES, if the ontologies that you want to match contain dates on one side
+     * and years on the other side. Default is FALSE.*/
+    public boolean normalizeDatesToYears = false;
+    /** size of k-grams to index */
+    public int shinglingSize;
+    /** number of hash functions */
+    public int shinglingFunctions;
+    /** hash table size */
+    public int shinglingTableSize = 10485760;
+    //public static int shinglingTableSize = 65536;
+    /** precompute shinglings */
+    public boolean precomputeShinglings = false;
+    /** divide approximate literal matches by this value (hacky) */
+    public double penalizeApproxMatches;
+    /** no approximate literal matches if an exact match exists */
+    public boolean noApproxIfExact = true;
+    /** parallelize the loading of each fact store */
+    public boolean parallelFileLoad;
+    /** number of threads for the shingling precomputation */
+    public int shinglingThreads;
+    /** if nonempty, print debug information for entities matching this string */
+    public String debugEntity;
+    /** report progress every time that many entities have been dealt with */
+    public int reportInterval;
+    /** number of entities on which we should search for join relation alignments at each iteration */
+    public int sampleEntities;
+    /** shuffle entities at each iteration */
+    public boolean shuffleEntities;
+    public double smoothNumerator;
+    public double smoothDenominator;
+    public double smoothNumeratorSampling;
+    public double smoothDenominatorSampling;
+    public boolean cleverMatching;
+    public int sumJoinLengthLimit;
+    public double postLiteralDistanceThreshold;
+    public boolean shinglingSquare;
+    public boolean allowLoops;
+    public boolean printNeighborhoodsSampling;
+    
+    /** Use a special optimized findEqualsOf when no joins are made */
+    public boolean optimizeNoJoins;
+    
+    public boolean debugSampling;
 
-  public double joinThreshold;
+    public double joinThreshold;
 
-  //xch2.0
-  public int max_alignment_sentences;
-  public int max_evidence;
-  public int display_evidence_count;
-  public int display_evidence_run_small;
-  public int display_evidence_run_big;
-  public float TRUTH_EPSILON;
+    //xch2.0
+    public int max_alignment_sentences;
+    public int max_evidence;
+    public int display_evidence_count;
+    public int display_evidence_iteration_small;
+    public int display_evidence_iteration_big;
+    public float TRUTH_EPSILON;
 
-  public float relation_triple_initial_frequency_fs1;
-  public double relation_triple_initial_confidence_fs1;
-  public float attribute_triple_initial_frequency_fs1;
-  public double attribute_triple_initial_confidence_fs1;
-  public float relation_triple_initial_frequency_fs2;
-  public double relation_triple_initial_confidence_fs2;
-  public float attribute_triple_initial_frequency_fs2;
-  public double attribute_triple_initial_confidence_fs2;
+    public float relation_triple_initial_frequency_fs1;
+    public double relation_triple_initial_confidence_fs1;
+    public float attribute_triple_initial_frequency_fs1;
+    public double attribute_triple_initial_confidence_fs1;
+    public float relation_triple_initial_frequency_fs2;
+    public double relation_triple_initial_confidence_fs2;
+    public float attribute_triple_initial_frequency_fs2;
+    public double attribute_triple_initial_confidence_fs2;
 
-  public double literal_equal_initial_confidence;
-  // truth %0.0 , unaligned_entity_equal_initial_confidence%
-  public double unaligned_entity_equal_initial_confidence;
-  public double entity_emb_sim_confidence;
-  public double attribute_value_emb_sim_confidence;
-  public int literal_approximate_equal_count;
-  //as original PARIS
-  public boolean use_c_as_probability_value = false;
-  public boolean add_evidence_remove_duplicate = false; 
-  public int add_evidence_remove_duplicate_run;
-  public double increse_relation_frequency;
-  public double increse_attribute_frequency;
-  public boolean use_entity_emb_sim;
-  public boolean use_attribute_value_emb_sim;
-  public File entity_emb;
-  public File emb_entity_names;
-  //public File attribute_value_emb;
-  public File attribute_value_names;
-  public File attribute_value_emb_sim_1;
-  public File attribute_value_emb_sim_2;
+    public double literal_equal_initial_confidence;
+    // truth %0.0 , unaligned_entity_equal_initial_confidence%
+    public double unaligned_entity_equal_initial_confidence;
+    public double entity_emb_sim_confidence;
+    public double attribute_value_emb_sim_confidence;
+    public int literal_approximate_equal_count;
+    //as original PARIS
+    public boolean use_c_as_probability_value = false;
+    public boolean add_evidence_remove_duplicate = false; 
+    public int add_evidence_remove_duplicate_iteration;
+    public double increse_relation_frequency;
+    public double increse_attribute_frequency;
+    public boolean use_entity_emb_sim;
+    public boolean use_attribute_value_emb_sim;
+    public File entity_emb;
+    public File emb_entity_names;
+    //public File attribute_value_emb;
+    public File attribute_value_names;
+    public File attribute_value_emb_sim_1;
+    public File attribute_value_emb_sim_2;
 
-  public int upper_attribute_value_num; 
-  public double value_similarity_lower_bound;
-  public int max_value_sim_count;
+    public int upper_attribute_value_num; 
+    public double value_similarity_lower_bound;
+    public int max_value_sim_count;
 
-  public int matching_strategy;
-  public int max_sparse_alignment;
-  public boolean modify_matches;
+    public int matching_strategy;
+    public int max_sparse_alignment;
+    public boolean modify_matches;
 
-  public boolean use_translate_emb;
-  public File trans_entity_emb;
-  public double trans_entity_emb_sim_confidence;
+    public boolean use_translate_emb;
+    public File trans_entity_emb;
+    public double trans_entity_emb_sim_confidence;
 
-  public boolean all_revision;
-  public boolean all_prob_revision;
-  public boolean precompute_emb_sim;
-  public boolean modify_initial_confidence; 
-  public boolean entity_clustering;
-  public int entity_clustering_run;
-  public boolean use_path_3;
-  public double missing_triple_initial_confidence;
-  public boolean adaptive_entity_emb_sim_confidence;
-  public boolean no_attr;
-  public int bootsrtap;
-  public int table_setting;
+    public boolean all_revision;
+    public boolean all_prob_revision;
+    public boolean precompute_emb_sim;
+    public boolean modify_initial_confidence; 
+    public boolean entity_clustering;
+    public int entity_clustering_iteration;
+    public boolean use_path_3;
+    public double missing_triple_initial_confidence;
+    public boolean adaptive_entity_emb_sim_confidence;
+    public boolean no_attr;
+    public int bootsrtap;
+    public int table_setting;
 
-  /** Types of string distance used in Computed.compareStrings()*/
-  /* LEVENSHTEIN and SHINGLINGLEVENHSHTEIN are not guaranteed to work */
-  public static enum LiteralDistance {
-    IDENTITY, BAGOFCHARS, NORMALIZE, BAGOFWORDS, LEVENSHTEIN, SHINGLING, SHINGLINGLEVENSHTEIN
-  };
+    /** Types of string distance used in Computed.compareStrings()*/
+    /* LEVENSHTEIN and SHINGLINGLEVENHSHTEIN are not guaranteed to work */
+    public static enum LiteralDistance {
+        IDENTITY, BAGOFCHARS, NORMALIZE, BAGOFWORDS, LEVENSHTEIN, SHINGLING, SHINGLINGLEVENSHTEIN
+    };
 
-  /** String distance used in Computed.compareStrings() for negative evidence.
-   * Has an effect only if punish=TRUE. 
-   * There is not much use tinkering with this value, leave it at the default value of IDENTITY.
-   * If you need a string distance, use normalizeStrings=TRUE.*/
-  /* if you use SHINGLING or SHINGLINGLEVENSHTEIN, make sure that the fact stores were generated with the literal indexes */
-  public LiteralDistance literalDistance;
+    /** String distance used in Computed.compareStrings() for negative evidence.
+     * Has an effect only if punish=TRUE. 
+     * There is not much use tinkering with this value, leave it at the default value of IDENTITY.
+     * If you need a string distance, use normalizeStrings=TRUE.*/
+    /* if you use SHINGLING or SHINGLINGLEVENSHTEIN, make sure that the fact stores were generated with the literal indexes */
+    public LiteralDistance literalDistance;
   
   /** Constructs a setting*/
-  public Setting(String name, String homeFolder, String o1, String o2, String berkeley, String tsv,GoldStandard g) {
+  public Setting(String name, String homeFolder, String o1, String o2, String berkeley, String tsv) {
     this.name=name;
     home=new File(homeFolder);
+    output_evaluate_path = home;
     ontology1=new File(home,o1);
     ontology2=new File(home,o2);
     tsvFolder=new File(home,tsv);
-    gold=g;
     
     // TODO: this is redundant with the default value of the settings below
     lastPassThreshold = 0;
@@ -201,7 +202,7 @@ public class Setting {
     shinglingTableSize = 10485760;
     shinglingThreads = 4;
     endIteration=10;
-    last_run = endIteration - 1;
+    last_iteration = endIteration - 1;
     //xch1
     nThreads=Runtime.getRuntime().availableProcessors()*3/5;
     joinLengthLimit = 1;
@@ -262,13 +263,18 @@ public class Setting {
   public Setting(File ini) throws IOException {
     Parameters.init(ini);
     name=FileSet.newExtension(ini.getName(),"");
+    
     tsvFolder=Parameters.getOrRequestAndAddFile("resultTSV", "Enter the folder where the result shall be stored in TSV format:");
-    gold=null;
     ontology1=Parameters.getOrRequestAndAddFile("factstore1", "Enter the folder where the first fact store lives:");
     ontology2=Parameters.getOrRequestAndAddFile("factstore2", "Enter the folder where the second fact store lives:");
+    train=Parameters.getFile("train");
+    valid=Parameters.getFile("valid");
+    test=Parameters.getFile("test");
+    zero_seed=Parameters.getBoolean("zero_seed", false);
     factstore1_1v1_assumption=Parameters.getFile("factstore1_1v1_assumption", null);
     factstore2_1v1_assumption=Parameters.getFile("factstore2_1v1_assumption", null);
     home=Parameters.getOrRequestAndAddFile("home", "Enter the folder where log information can be stored");
+    output_evaluate_path = Parameters.getOrRequestAndAddFile("output_evaluate_path", "Enter the folder where evaluate information can be stored");
 
     use_attribute_value_emb_sim = Parameters.getBoolean("use_attribute_value_emb_sim", false);
     use_entity_emb_sim = Parameters.getBoolean("use_entity_emb_sim", false);
@@ -286,7 +292,7 @@ public class Setting {
     shinglingTableSize=Parameters.getInt("shinglingTableSize", 10485760);
     shinglingThreads=Parameters.getInt("shinglingThreads", 4);
     endIteration=Parameters.getInt("endIteration", 13);
-    last_run = endIteration - 1;
+    last_iteration = endIteration - 1;
     //xch1
     nThreads=Parameters.getInt("nThreads", Runtime.getRuntime().availableProcessors()*3/5);
     joinLengthLimit=Parameters.getInt("joinLengthLimit", 1);
@@ -300,17 +306,18 @@ public class Setting {
     normalizeDatesToYears=Parameters.getBoolean("normalizeDatesToYears", false);
     precomputeShinglings=Parameters.getBoolean("precomputeShinglings", false);
     noApproxIfExact=Parameters.getBoolean("noApproxIfExact", true);
-    parallelFileLoad=Parameters.getBoolean("parallelFileLoad", true);
-    parallelFileLoad = false;
+    parallelFileLoad=Parameters.getBoolean("parallelFileLoad", false);
+    // default:true
     penalizeApproxMatches=Parameters.getDouble("penalizeApproxMatches", 1.1);
     smoothNumerator=Parameters.getDouble("smoothNumerator", 0.);
     smoothDenominator=Parameters.getDouble("smoothDenominator", 10.);
     smoothNumeratorSampling=Parameters.getDouble("smoothNumeratorSampling", 0.);
     smoothDenominatorSampling=Parameters.getDouble("smoothDenominatorSampling", 1.);
     debugEntity=Parameters.get("debugEntity",null);
-    reportInterval=Parameters.getInt("reportInterval", 5000);
+    reportInterval=Parameters.getInt("reportInterval", 20000);
     sampleEntities=Parameters.getInt("sampleEntities", 0);
-    //shuffleEntities=Parameters.getBoolean("shuffleEntities", true);
+    shuffleEntities=Parameters.getBoolean("shuffleEntities", false);
+    // default:true
     cleverMatching=Parameters.getBoolean("cleverMatching", false);
     sumJoinLengthLimit=Parameters.getInt("sumJoinLengthLimit", 2*joinLengthLimit);
     postLiteralDistanceThreshold=Parameters.getDouble("postLiteralDistanceThreshold", 0.78);
@@ -322,7 +329,7 @@ public class Setting {
     debugSampling=Parameters.getBoolean("debugSampling", false);
 
     use_c_as_probability_value=Parameters.getBoolean("use_c_as_probability_value", false);
-    add_evidence_remove_duplicate_run=Parameters.getInt("add_evidence_remove_duplicate_run", 20);
+    add_evidence_remove_duplicate_iteration=Parameters.getInt("add_evidence_remove_duplicate_iteration", 20);
     
     //xch2.0
     entity_emb_sim_confidence = Parameters.getDouble("entity_emb_sim_confidence", 0.6);
@@ -330,7 +337,7 @@ public class Setting {
     literal_approximate_equal_count = Parameters.getInt("literal_approximate_equal_count", 2);
     value_similarity_lower_bound = Parameters.getDouble("value_similarity_lower_bound", 0.3); 
     max_value_sim_count = Parameters.getInt("max_value_sim_count", 50);
-    shuffleEntities = false;
+    
     increse_relation_frequency = Parameters.getDouble("increse_relation_frequency", 0.5); 
     increse_attribute_frequency = Parameters.getDouble("increse_attribute_frequency", 0.5); 
     max_alignment_sentences=Parameters.getInt("max_alignment_sentences", 5);
@@ -347,7 +354,7 @@ public class Setting {
     precompute_emb_sim =Parameters.getBoolean("precompute_emb_sim", false);
     modify_initial_confidence =Parameters.getBoolean("modify_initial_confidence", false);
     entity_clustering = Parameters.getBoolean("entity_clustering", false);
-    entity_clustering_run=Parameters.getInt("entity_clustering_run", 3);
+    entity_clustering_iteration=Parameters.getInt("entity_clustering_iteration", 3);
     use_path_3 =Parameters.getBoolean("use_path_3", true);
     missing_triple_initial_confidence = Parameters.getDouble("missing_triple_initial_confidence", 0.5); 
     adaptive_entity_emb_sim_confidence = Parameters.getBoolean("adaptive_entity_emb_sim_confidence", false);
@@ -369,8 +376,8 @@ public class Setting {
     literal_equal_initial_confidence = 1;
     unaligned_entity_equal_initial_confidence = 0.85;
 
-    display_evidence_run_small = 3;
-    display_evidence_run_big = last_run;//last_run - 1
+    display_evidence_iteration_small = 3;
+    display_evidence_iteration_big = last_iteration;//last_iteration - 1
 
     add_evidence_remove_duplicate = true;
     
@@ -387,14 +394,5 @@ public class Setting {
     	System.exit(2);
     }
   }
-  // Different settings
-  public static final Setting restaurants=new Setting("Restaurants","c:/fabian/data/restaurant","restaurant1","restaurant2","eqv","eqvtsv",new GoldStandard(112));
-  public static final Setting restaurantsnormalized=new Setting("RestaurantsNormalized","c:/fabian/data/restaurant_normalized","restaurant1","restaurant2","eqv","eqvtsv",new GoldStandard(112));
-  public static final Setting persons =new Setting("Persons","c:/fabian/data/personA","person1","person2","eqv","eqvtsv",new GoldStandard(500));
-  public static final Setting personsnormalized=new Setting("PersonsNormalized","c:/fabian/data/person_normalized","person1","person2","eqv","eqvtsv",new GoldStandard(500));
-  public static final Setting yagodbpedia=new Setting("YagoDbpedia","/media/ssd/fabian/data","yago/berkeley","dbpedia/berkeley","eqv","eqvtsv",new GoldStandard(1429686,GoldStandard.yagoDbpediaRelations));
-  public static final Setting yagodbpediaMoreFacts=new Setting("YagoDbpediaMoreFacts","/media/ssd/fabian/data","yago/berkeley","dbpedia/berkeley","eqv","eqvtsv",new GoldStandard(1049629,GoldStandard.yagoDbpediaRelations));
-  public static final Setting dbpediaSelf=new Setting("DbpediaSelf","/media/ssd/fabian/data","dbpedia/berkeley","dbpedia/berkeley","eqv","eqvtsv",new GoldStandard(2365777,GoldStandard.yagoDbpediaRelations));
-  public static final Setting yagodbpediaNew=new Setting("YagoDbpediaNew","/home/a3nm/DOCUMENTS/stage/paris","yago/memory","dbpedia/memory","eqv","eqvtsv",new GoldStandard(1484735,GoldStandard.yagoDbpediaRelations));
-  public static final Setting imdbyago=new Setting("ImdbYago","/media/ssd/fabian/data","yago/berkeley","imdb/berkeley","eqv","eqvtsv",new GoldImdbYago());
+  
 }

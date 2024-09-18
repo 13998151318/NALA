@@ -432,7 +432,7 @@ def run_paris(dataset_in, root_folder, name, ontology1, ontology2, kg1_1v1_assum
         ini_file.write(f'missing_triple_initial_confidence = {missing_triple_initial_confidence}\n')
 
                                                        #PARIS_xch2.1.jar  paris.jar -Xmx26000m
-    _ = subprocess.call(['java', '-Xmx60000m', '-Xss64m', '-jar', 'pnal-1.0.0-jar-with-dependencies.jar', task_name + '/paris.ini'])
+    _ = subprocess.call(['java', '-Xmx60000m', '-Xss64m', '-jar', 'nala-1.0.0-jar-with-dependencies.jar', task_name + '/paris.ini'])
     return task_name, endIteration
 
 

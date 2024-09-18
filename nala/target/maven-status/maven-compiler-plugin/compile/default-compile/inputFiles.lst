@@ -160,7 +160,6 @@ d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\DoubleKeyLongMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\BooleanKeyDoubleMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\set\CharSet.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\set\ByteSortedSet.java
-d:\KG\EA\NALA\nala\src\main\java\nala\evaluation\Evaluation.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\set\FloatOpenHashSet.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\MapToLongKeyIntMapAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ShortKeyLongMapIterator.java
@@ -298,7 +297,6 @@ d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ShortKeyIntMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\SetToFloatSetAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\list\CharStack.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\set\ShortOpenHashSet.java
-d:\KG\EA\NALA\nala\src\main\java\nala\evaluation\GoldImdbYago.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\MapToBooleanKeyDoubleMapAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\ObjectKeyShortMapToMapAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\FloatKeyShortOpenHashMap.java
@@ -380,6 +378,7 @@ d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\LongKeyIntOpenHashMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ShortKeyShortMapIterator.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\MapDefaults.java
 d:\KG\EA\NALA\nala\src\main\java\javatools\datatypes\FastFrequencyVector.java
+d:\KG\EA\NALA\nala\src\main\java\nala\Evaluation.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\AbstractBooleanKeyMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\IntKeyFloatMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\IntKeyLongChainedHashMap.java
@@ -623,7 +622,6 @@ d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ByteKeyShortMapIterator.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\IntCollection.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\AbstractObjectKeyByteMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\ByteKeyMapToMapAdapter.java
-d:\KG\EA\NALA\nala\src\main\java\nala\evaluation\RemoveDupsFromOutput.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\list\CharArrayList.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\MapToObjectKeyCharMapAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\javatools\parsers\DateParser.java
@@ -851,7 +849,6 @@ d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\DoubleKeyLongOpenHashMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\DoubleKeyOpenHashMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ByteKeyChainedHashMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\FloatKeyFloatMap.java
-d:\KG\EA\NALA\nala\src\main\java\nala\evaluation\GoldStandard.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\CharKeyFloatMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\list\IntDeque.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\LongKeyByteOpenHashMap.java
@@ -964,7 +961,6 @@ d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\LongKeyDoubleMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ObjectKeyCharMapIterator.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\MapToBooleanKeyCharMapAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\javatools\datatypes\Pair.java
-d:\KG\EA\NALA\nala\src\main\java\nala\evaluation\SampleClasses.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\adapter\SetToIntSetAdapter.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\ByteKeyDoubleMap.java
 d:\KG\EA\NALA\nala\src\main\java\bak\pcj\map\CharKeyIntMapIterator.java

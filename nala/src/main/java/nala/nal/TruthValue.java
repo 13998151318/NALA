@@ -1,9 +1,5 @@
 package nala.nal;
 
-import javatools.administrative.D;
-import nala.Setting;
-
-import java.beans.Transient;
 import java.io.Serializable;
 
 //xch2.0
@@ -38,11 +34,19 @@ public class TruthValue implements Cloneable, Serializable {
      */
     public static float HORIZON = 1;
 
+    public static boolean setting_use_c_as_probability_value;
+
+    public static double setting_increse_attribute_frequency;
+    public static double setting_increse_relation_frequency;
+
     public TruthValue() {
         this(0,0);
     }
 
-    public static void set_TRUTH_EPSILON(float TRUTH_EPSILON1) {
+    public static void set_setting(boolean setting_use_c_as_probability_value1, double setting_increse_attribute_frequency1, double setting_increse_relation_frequency1, float TRUTH_EPSILON1) {
+        setting_use_c_as_probability_value = setting_use_c_as_probability_value1;
+        setting_increse_attribute_frequency = setting_increse_attribute_frequency1;
+        setting_increse_relation_frequency = setting_increse_relation_frequency1;
         TRUTH_EPSILON = TRUTH_EPSILON1;
     }
 
@@ -171,39 +175,39 @@ public class TruthValue implements Cloneable, Serializable {
         return this;
     }
 
-    public TruthValue increse_frequency_linearly(Setting setting, boolean attributive) {
+    public TruthValue increse_frequency_linearly(boolean attributive) {
         double percent = 0;
-        if (setting.use_c_as_probability_value){
+        if (setting_use_c_as_probability_value){
             if (getConfidence()>=0.25){
                 if(attributive)
-                    percent = setting.increse_attribute_frequency;
+                    percent = setting_increse_attribute_frequency;
                 else
-                    percent = setting.increse_relation_frequency;
+                    percent = setting_increse_relation_frequency;
             }
             else if (getConfidence()>=0.2){
                 if(attributive)
-                    percent = setting.increse_attribute_frequency/2;
+                    percent = setting_increse_attribute_frequency/2;
                 else
-                    percent = setting.increse_relation_frequency/2;
+                    percent = setting_increse_relation_frequency/2;
             }
         }
         else{
             if (getConfidence()>=0.8){
                 if (getFrequency()>=0.25){
                     if(attributive)
-                        percent = setting.increse_attribute_frequency;
+                        percent = setting_increse_attribute_frequency;
                     else
-                        percent = setting.increse_relation_frequency;
+                        percent = setting_increse_relation_frequency;
                 }
                 else if (getFrequency()>=0.2){
                     if(attributive)
-                        percent = setting.increse_attribute_frequency/2;
+                        percent = setting_increse_attribute_frequency/2;
                     else
-                        percent = setting.increse_relation_frequency/2;
+                        percent = setting_increse_relation_frequency/2;
                 }
             }
         }
-        if (setting.use_c_as_probability_value)
+        if (setting_use_c_as_probability_value)
             setConfidence(this.confidence + (1 - this.confidence) * (percent));
         else
             setFrequency(this.frequency + (1 - this.frequency) * (percent));
@@ -383,6 +387,5 @@ public class TruthValue implements Cloneable, Serializable {
 
     public static void main(String[] args) throws Exception {
         TruthValue t = new TruthValue((float)0.90, 0.4);
-        D.p(t.toString());
     }
 }

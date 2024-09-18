@@ -34,7 +34,7 @@ import nala.sparseLAPJV.LAPJV;
 import nala.sparseLAPJV.SparseCostMatrix;
 import nala.storage.FactStore;
 import nala.storage.FactStore.PredicateAndObject;
-
+import nala.Evaluation;
 /** This class is part of the PARIS ontology matching project at INRIA Saclay/France.
  * 
  * It is licensed under a Creative Commons Attribution Non-Commercial License
@@ -72,16 +72,16 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
     //AlignmentSentence alignment_sentences_fs1_To_fs2[][];
     //AlignmentSentence alignment_sentences_fs2_To_fs1[][];
     Setting setting;
-    int run;
+    int iteration;
 
-	public EqualityStore(FactStore fs11, FactStore fs21, Setting setting1, int run1) throws IOException {
+	public EqualityStore(FactStore fs11, FactStore fs21, Setting setting1, int iteration1) throws IOException {
         super(fs11, fs21);
         subIndexMatch = new int[fs1.numEntities() + fs1.numClasses() + 1];
         subIndexScore = new TruthValue[fs1.numEntities() + fs1.numClasses() + 1];
         superIndexMatch = new int[fs2.numEntities() + fs2.numClasses() + 1];
         superIndexScore = new TruthValue[fs2.numEntities() + fs2.numClasses() + 1];
         setting = setting1;
-        run = run1;
+        iteration = iteration1;
         alignment_sentences_fs1_To_fs2 = new HashMap<Integer, LinkedList<AlignmentSentence>>((int)(fs1.num_proper_entities()/0.75 + 1));
         alignment_sentences_fs2_To_fs1 = new HashMap<Integer, LinkedList<AlignmentSentence>>((int)(fs2.num_proper_entities()/0.75 + 1));
         for (int i = 0; i < fs1.num_proper_entities(); i++) {
@@ -411,7 +411,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
             }
         }
         populate_right_to_left_1();
-        if (setting.modify_matches && run >= 5){
+        if (setting.modify_matches && iteration >= 5){
             boolean modified = true;
             while(modified){
                 modified = modify_matches();
@@ -957,6 +957,8 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
                 w.write(str);
             }
             w.close();
+            if (display_num == 1 && left_to_right)
+                Evaluation.evaluate(file, setting, new File(setting.output_evaluate_path, "result.log"), iteration);
             Announce.done();
             return;
         }
@@ -997,6 +999,8 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
                 break;
         }
         w.close();
+        if (display_num == 1 && left_to_right)
+            Evaluation.evaluate(file, setting, new File(setting.output_evaluate_path, "result.log"), iteration);
         Announce.done();
     }
     
@@ -1055,7 +1059,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
              *       from 8, 9, 10 and 7: y1 <-> y2           ...11      P118 Conditional deduction*3
              *   
              */
-        Setting setting = new Setting(null, "D:/", "nu", "nu", null, "nu",null);
+        Setting setting = new Setting(null, "D:/", "nu", "nu", null, "nu");
         EqualityStore equalityStore = new EqualityStore(10, setting);
         TruthValue truthValue1 = new TruthValue(1,1);
         TruthValue truthValue2 = new TruthValue(1f, 1);

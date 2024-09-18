@@ -2,14 +2,16 @@ package nala.nal;
 
 import java.util.ArrayList;
 
-import nala.Setting;
 
 public final class TruthFunctions {
-    public static Setting setting;
+    public static boolean setting_all_revision;
+    public static boolean setting_all_prob_revision;
 
-    public final static void set_setting(Setting setting1) {
-        setting = setting1;
+    public static void set_setting(boolean setting_all_revision1, boolean setting_all_prob_revision1) {
+        setting_all_revision = setting_all_revision1;
+        setting_all_prob_revision = setting_all_prob_revision1;
     }
+
     /**
      * A function where the output is conjunctively determined by the inputs
      * @param arr The inputs, each in [0, 1]
@@ -90,7 +92,7 @@ public final class TruthFunctions {
     }
 
     public static final TruthValue probabilistic_revision(final TruthValue v1, final TruthValue v2) {
-        if(setting.all_revision)
+        if(setting_all_revision)
             return revision(v1, v2, new TruthValue());
         else
             return probabilistic_revision(v1, v2, new TruthValue());
@@ -101,14 +103,14 @@ public final class TruthFunctions {
     }
 
     public static final TruthValue revision(TruthValue v1, TruthValue v2) {
-        if(setting.all_prob_revision)
+        if(setting_all_prob_revision)
             return probabilistic_revision(v1, v2, new TruthValue());
         else
             return revision(v1, v2, new TruthValue());
     }
 
     public static final TruthValue probabilistic_de_revision(final TruthValue v1, final TruthValue v2) {
-        if(setting.all_revision)
+        if(setting_all_revision)
             return de_revision(v1, v2, new TruthValue());
         else
             return probabilistic_de_revision(v1, v2, new TruthValue());
@@ -244,7 +246,7 @@ public final class TruthFunctions {
 
     
     public static final TruthValue de_revision(TruthValue v1, TruthValue v2) {
-        if(setting.all_prob_revision)
+        if(setting_all_prob_revision)
             return probabilistic_de_revision(v1, v2, new TruthValue());
         else
             return de_revision(v1, v2, new TruthValue());

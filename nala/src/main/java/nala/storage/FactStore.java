@@ -1107,14 +1107,18 @@ public class FactStore {
 
 
     public static void main(String[] args) throws Exception {
+        int number1 = 2;
+        int number2 = 4;
+        double number3 = (double)number1/(double)number2;
+        D.p("number3",number3);
         int number = 2;
         if (number > 5)
             System.out.println("Number is greater than 5");
         else
             System.out.println("Number is not greater than 5");
         System.setProperty("java.vm.name","Java HotSpot(TM) ");
-        Setting setting = new Setting("", "", "", "", "", "", null);
-        TruthFunctions.set_setting(setting);
+        Setting setting = new Setting("", "", "", "", "", "");
+        TruthFunctions.set_setting(setting.all_revision, setting.all_prob_revision);
         TruthValue t[], temp; //t[0]表示从多条path选取的最终结果
         TruthValue p[]; //代表由某个path推出的最优y1 <-> y2的推理结果
         double c = 0.6003087066251795;
