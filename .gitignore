@@ -7,6 +7,7 @@
 /dataSources/
 /dataSources.local.xml
 /target
+/target/**
 
 # Compiled class file
 *.class
