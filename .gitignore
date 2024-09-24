@@ -6,8 +6,7 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-/target
-/target/**
+nala/target
 
 # Compiled class file
 *.class
