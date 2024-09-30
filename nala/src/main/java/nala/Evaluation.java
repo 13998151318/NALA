@@ -158,7 +158,7 @@ public class Evaluation {
         BufferedWriter w = new BufferedWriter(new FileWriter(evaluateFile, true));
         String str = "";
         if(num_correct == 0){
-            str = "iteration: " + iteration + " " + "precision: " + String.format("%.5f", 0) + " " + "recall: " + String.format("%.5f", 0) + " " + "f1: " + String.format("%.5f", 0) + " len_predicted_outside_train: " + len_predicted_outside_train + "\n";
+            str = "iteration: " + iteration + " " + "precision: " + String.format("%.5f", 0f) + " " + "recall: " + String.format("%.5f", 0f) + " " + "f1: " + String.format("%.5f", 0f) + " len_predicted_outside_train: " + len_predicted_outside_train + "\n";
             w.write(str);
             w.close();
             return;
