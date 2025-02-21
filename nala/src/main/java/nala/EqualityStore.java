@@ -883,9 +883,9 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
                     xeqv = base.x_truth; //xeqv = computed.equality(fs1, x1, x2);
                     w.write(fs1.entity(x1) + " <-> " + fs2.entity(x2) + "  " + xeqv.toString() + "\n");
                     if (english)
-                        w.write("The conclusion of the path (also a piece of evidence) is" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
+                        w.write("The conclusion of the path (also a piece of evidence) is:\n" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
                     else
-                        w.write("所得语句及（属于该条证据的）真值为" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
+                        w.write("所得语句及（属于该条证据的）真值为:\n" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
                     w.write("}\n");
                     break;
                 case 2:
@@ -894,9 +894,9 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
                     else
                         w.write("{\n 第" + i + "条证据：\n由name/description嵌入相似度得到\n");
                     if (english)
-                        w.write("The conclusion of the path (also a piece of evidence) is" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
+                        w.write("The conclusion of the path (also a piece of evidence) is:\n" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
                     else
-                        w.write("所得语句及（属于该条证据的）真值为" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
+                        w.write("所得语句及（属于该条证据的）真值为:\n" + fs1.entity(y1) + " <-> " + fs2.entity(y2) + " . " + base.truthValue.toString() + "\n");
                     w.write("}\n");
             }
             
@@ -915,7 +915,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
             if (i>1000)
                 break;
             if (english)
-                str = "For the" + i + "th entity   " + fs1.entity(i) + ":\n";
+                str = "For the " + i + "th entity   " + fs1.entity(i) + ":\n";
             else
                 str = "对于第" + i + "个实体   " + fs1.entity(i) + ":\n";
             w.write(str);

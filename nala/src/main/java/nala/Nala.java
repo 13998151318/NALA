@@ -53,15 +53,14 @@ import fr.lri.tao.apro.data.DataProvider;
 import fr.lri.tao.apro.data.MatrixProvider;
 
 /**
- * This class is part of the PARIS ontology matching project at INRIA
- * Saclay/France.
  * 
- * It is licensed under a Creative Commons Attribution Non-Commercial License by
- * the author Fabian M. Suchanek (http://suchanek.name). For all further
- * information, see http://webdam.inria.fr/paris
+ * This work, the alignment model of NALA, has its framework and source code adapted from 
+ * the source code of the PARIS ontology matching project
+ * (http://webdam.inria.fr/paris, by the author Fabian M. Suchanek http://suchanek.name, used under CC BY-NC 3.0)
+ * and is licensed under a Creative Commons Attribution Non-Commercial License by
+ * the author Chuanhao Xu. For further information, see https://github.com/13998151318/NALA.
  * 
- * This class implements a very cool probabilistic framework for ontology
- * matching
+ * This class implements an entity alignment framework
  */
 
 //xch2.0 xch2.0改动为在xch1的基础上试图将paris+中的对齐公式进行NAL推理化改造，并且提供模型自解释性能力，输出对齐结果的主要证据。
@@ -92,10 +91,13 @@ public class Nala {
 
     //public static HashMap<Integer,ArrayList<Float>> attribute_value_emb;
 
+    //attribute value map to its id
     public static HashMap<String,Integer> value_to_id;
 
     public static HashMap<Integer,String> id_to_value;
 
+    // there are two ids for an entity. The big id system of a FactStore contains entities, class(if any) and literal values. The small id only contains matchable entities.
+    // [small id]
     public static HashMap<Integer, LinkedList<AlignmentSentence>> alignment_sentences_of_entity_embedding;
 
     // [small id][small id]   in AlignmentSentence:[big id][big id] 
@@ -840,6 +842,7 @@ public class Nala {
 			}
 		}
 
+        //abandoned function (in this project) that consideres Join-Relations
 		/** Find equality candidates for an entity y1 */
 		public void findEqualsOf(int y1) {
 			//Announce.message("@CALL findEqualsOf", y1, fs1.toString(y1), "");
@@ -1257,6 +1260,7 @@ public class Nala {
                     findEqualsOf1(e1);
                 }
 				else{
+                    //abandoned function (in this project) that consideres Join-Relations
                     findEqualsOf(e1);
                 }
 				if (setting.debugEntity != null) {
@@ -1567,8 +1571,8 @@ public class Nala {
                 divide_confidence_num = 3;
             if (setting.bootsrtap == 0 && setting.table_setting == 3)
                 divide_confidence_num *= 4;
-            if (setting.bootsrtap == 1 && setting.table_setting == 3)
-                divide_confidence_num *= 2;
+            //if (setting.bootsrtap == 1 && setting.table_setting == 3)
+            //    divide_confidence_num *= 2;W
             //if (setting.table_setting == 3)
             //    divide_confidence_num *= 2;
             computed.avg_sim_confidence = TruthFunctions.divide_confidence(avg_sim_confidence, divide_confidence_num);
@@ -2321,16 +2325,7 @@ public class Nala {
 		// Load the setting
 		if (args == null || args.length < 1) {
 			Announce
-					.help(
-							"PARIS aligns the instances, relations, and classes of two knowledge bases (KBs).\n",
-							"java paris.Paris <settingFile>",
-							"      You can specify a file that has no content.",
-							"      PARIS will then ask for the necessary data and store it in <settingFile>.\n",
-							"java paris.Paris <kb1> <kb2> <outputFolder>",
-							"      Aligns <kb1> and <kb2>, puts the results into <outputFolder>.\n",
-							"java paris.Paris <factstore> <dump>",
-							"      Dumps all entities of <factstore> to the file <dump>\n",
-							"See http://webdam.inria.fr/paris/ for further information.");
+					.help("See https://github.com/13998151318/NALA for further information.");
 			System.exit(1);
 		}
 		
@@ -2340,7 +2335,7 @@ public class Nala {
 			System.exit(0);
 		}
 
-		Announce.doing("Starting PARIS");
+		Announce.doing("Starting NALA");
 		if (args.length == 3) {
 			Announce.message("Settings specified on command line");
 	    setting = new Setting("", ".", args[0], args[1], null, args[2]);
@@ -2369,14 +2364,14 @@ public class Nala {
 		Announce.done();
 		File logFile = new File(setting.home, "run_" + setting.name + "_"
 				+ NumberFormatter.timeStamp() + ".txt");
-		Announce.message("PARIS is now running!");
+		Announce.message("NALA is now running!");
 		Announce
 				.message("For information about the current state of affairs, look into");
 		Announce.message("   ", logFile);
 		if (!test)
 			Announce.setWriter(new FileWriter(logFile)); /**/
 
-		Announce.message("PARIS running at", NumberFormatter.ISOtime());
+		Announce.message("NALA running at", NumberFormatter.ISOtime());
 		Announce.message("@TIME", "startup", System.currentTimeMillis() / 1000L);
 		Config.print();
         
@@ -2439,7 +2434,7 @@ public class Nala {
 			Announce.message("@TIME iteration=", iteration," ", System.currentTimeMillis() / 1000L);
 			// note that we don't check anymore if something has changed...
 
-			// xch注释 主入口！！！
+			// main entrance
 			oneIteration();
 		}
 		Announce.message("@TIME", setting.endIteration + 1, System.currentTimeMillis() / 1000L);
@@ -2453,7 +2448,7 @@ public class Nala {
 		Announce.message("@TIME", "classes", System.currentTimeMillis() / 1000L);
 		computed.print();
 		computed.close();
-		System.out.printf("PARIS terminated after %d milliseconds\n",
+		System.out.printf("NALA terminated after %d milliseconds\n",
 				System.currentTimeMillis() - startTime);
 		Announce.message("@TIME", "shutdown", System.currentTimeMillis() / 1000L);
 		Announce.close();
