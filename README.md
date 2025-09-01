@@ -1,5 +1,6 @@
 # NALA
 Source code [Experiments, Datasets] for "NALA: an Effective and Interpretable Entity Alignment Method"
+[paper link in acl anthology](https://aclanthology.org/2024.findings-emnlp.806/)
 
 ## Source code references
 The source code for some parts of our method has been adapted from the corresponding repositories. 
