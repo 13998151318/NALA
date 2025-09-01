@@ -16,6 +16,7 @@ If you want to run the BERT unit, create an environment (fine for python3.8, tor
 
 Download the datasets, pretrained BERT model and some experiment results (with evidence log file): you can find them following the link [https://figshare.com/s/37e2d85e87e35d90d2e5](https://figshare.com/s/37e2d85e87e35d90d2e5). 
 Extract the zip and place the contents of "datasets" into the empty folder "NALA/datasets". 
+as the file is big, we provide a light version here [https://figshare.com/s/d094d20a960a42979df2](https://figshare.com/s/d094d20a960a42979df2) (without pretrained bert model and embeddings).
 
 The DBP15k datasets and OpenEA benchmark datasets are consistent with other studies, with urls of entities and relations abbreviated for simplicity.
 ## Reproduction of results
