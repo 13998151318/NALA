@@ -318,23 +318,23 @@ def run_nala(dataset_in, root_folder, dataset_name, kg1_path, kg2_path, kg1_1v1_
         trans_entity_emb_sim_confidence = 0
         if table_setting == 3:
             if lang == "fr":
-                if bootstrap == 0:
+                if bootstrap == 1:
                     entity_emb_sim_confidence = 0.45 #0.6
                     trans_entity_emb_sim_confidence = 0.45
-                elif bootstrap == 1:
+                elif bootstrap == 2:
                     entity_emb_sim_confidence = 0.55 #0.6
                     trans_entity_emb_sim_confidence = 0.55
-                elif bootstrap == 2:
+                elif bootstrap == 3:
                     entity_emb_sim_confidence = 0.65 #0.6
                     trans_entity_emb_sim_confidence = 0.65
             else:
-                if bootstrap == 0:  # 0.6 c = 1.5 w; 0.75w = 0.42857 c      ; 0.8 c = 4 w; 2w = 0.666 cs
+                if bootstrap == 1:  # 0.6 c = 1.5 w; 0.75w = 0.42857 c      ; 0.8 c = 4 w; 2w = 0.666 cs
                     entity_emb_sim_confidence = 0.2 #0.6
                     trans_entity_emb_sim_confidence = 0.2
-                elif bootstrap == 1:
+                elif bootstrap == 2:
                     entity_emb_sim_confidence = 0.3 #0.6
                     trans_entity_emb_sim_confidence = 0.3
-                elif bootstrap == 2:
+                elif bootstrap == 3:
                     entity_emb_sim_confidence = 0.4 #0.6
                     trans_entity_emb_sim_confidence = 0.4
         else:
