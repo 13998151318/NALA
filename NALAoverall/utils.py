@@ -314,6 +314,8 @@ def run_nala(dataset_in, root_folder, dataset_name, kg1_path, kg2_path, kg1_1v1_
         """
 
         #entity_emb_sim_confidence & trans_entity_emb_sim_confidence unused
+        entity_emb_sim_confidence = 0
+        trans_entity_emb_sim_confidence = 0
         if table_setting == 3:
             if lang == "fr":
                 if bootstrap == 0:
