@@ -14,6 +14,10 @@ def create_folds(dataset, k, division):
     split_folder = division.replace("/", "") + "_" + str(k) + "folds"
     if not os.path.isdir(dataset + "/" + split_folder):
         os.mkdir(dataset + "/" + split_folder)
+
+    split_folder2 = division.replace("/", "") + "_" + "1" + "folds"
+    if not os.path.isdir(dataset + "/" + split_folder2):
+        os.mkdir(dataset + "/" + split_folder2)
     for k_split in range(1, k + 1):
         k_folder = dataset + "/" + split_folder + "/" + str(k_split)
         if not os.path.isdir(k_folder):
@@ -29,6 +33,19 @@ def create_folds(dataset, k, division):
         with open(k_folder + "/valid_links", "w", encoding = "utf8") as f:
             f.writelines(valid_links)
         print("Written fold {}!".format(k_split))
+
+        
+        
+        if k_split==1:
+            k_folder2 = dataset + "/" + split_folder2 + "/" + str(k_split)
+            if not os.path.isdir(k_folder2):
+                os.mkdir(k_folder2)
+            with open(k_folder2 + "/test_links", "w", encoding = "utf8") as f:
+                f.writelines(test_links)
+            with open(k_folder2 + "/train_links", "w", encoding = "utf8") as f:
+                f.writelines(train_links)
+            with open(k_folder2 + "/valid_links", "w", encoding = "utf8") as f:
+                f.writelines(valid_links)
 
 
 if __name__ == "__main__":

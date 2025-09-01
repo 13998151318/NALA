@@ -1,14 +1,33 @@
 import os
 import pickle
+from Param import *
 
+
+abbreviate_dict = {"http://dbpedia.org/resource/":"dbp_en:","http://dbpedia.org/property/":"dbp_en_prop:","http://zh.dbpedia.org/resource/":"dbp_zh:","http://zh.dbpedia.org/property/":"dbp_zh_prop:"
+                   ,"http://fr.dbpedia.org/resource/":"dbp_fr:","http://fr.dbpedia.org/property/":"dbp_fr_prop:"
+                   ,"http://ja.dbpedia.org/resource/":"dbp_ja:","http://ja.dbpedia.org/property/":"dbp_ja_prop:"
+                   ,"http://www.w3.org/2001/XMLSchema#":"xsd:","http://dbpedia.org/datatype/":"dbp_type:"
+                   ,"http://xmlns.com/foaf/0.1/":"foaf:"
+                   ,"http://purl.org/dc/elements/1.1/":"purl:"
+                   , "http://dbpedia.org/ontology/":"dbp_onto_prop:"}
 
 def get_name(string):
+    """
     if r"resource/" in string:
         sub_string = string.split(r"resource/")[-1]
     elif r"property/" in string:
         sub_string = string.split(r"property/")[-1]
     else:
         sub_string = string.split(r"/")[-1]
+    sub_string = sub_string.replace('_',' ')
+    return sub_string
+    """
+    for value in abbreviate_dict.values():
+        if value in string:
+            sub_string = string.split(value)[-1]
+            sub_string = sub_string.replace('_',' ')
+            return sub_string
+    sub_string = string.split(r"/")[-1]
     sub_string = sub_string.replace('_',' ')
     return sub_string
 
@@ -41,21 +60,21 @@ def read_structure_datas(data_path):
                 th = line.strip('\n').split('\t')
                 ret.append( ( int(th[0]),th[1] ) )
         return ret
-    def read_entity_tuple_file(file_path, entity2index, rel2index):
-        print('loading a idtuple file...   ' + file_path)
+    def read_entity_tuple_file(file_path, entity2index, rel2index, before_trans_entity2index):
+        print('loading a entity name tuple file...   ' + file_path)
         ret = []
         with open(file_path, "r", encoding='utf-8') as f:
             for line in f:
                 th = line.strip('\n').split('\t')
                 x = []
                 if len(th)==2:
-                    x.append(entity2index[th[0]])
-                    x.append(entity2index[th[1]])
+                    x.append(before_trans_entity2index[th[0]])
+                    x.append(before_trans_entity2index[th[1]])
                     ret.append(tuple(x))
                 if len(th)==3:
-                    x.append(entity2index[th[0]])
+                    x.append(before_trans_entity2index[th[0]])
                     x.append(rel2index[th[1]])
-                    x.append(entity2index[th[2]])
+                    x.append(before_trans_entity2index[th[2]])
                     ret.append(tuple(x))
         return ret
     
@@ -66,16 +85,22 @@ def read_structure_datas(data_path):
     entity2index = {e:idx for idx,e in index2entity.items()}
     rel2index = {r:idx for idx,r in index2rel.items()}
     #relation triples
-    rel_triples_1 = read_idtuple_file(data_path + 'triples_1')
-    rel_triples_2 = read_idtuple_file(data_path + 'triples_2')
+    rel_triples_1 = read_entity_tuple_file(data_path + 'rel_triples_1', entity2index, rel2index, entity2index)
+    rel_triples_2 = read_entity_tuple_file(data_path + 'rel_triples_2', entity2index, rel2index, entity2index)
     #entity_ill
     #train_ill = read_idtuple_file(data_path + 'sup_pairs')
     #test_ill = read_idtuple_file(data_path + 'ref_pairs')
-    train_ill = read_entity_tuple_file(data_path + 'sup_pairs', entity2index, rel2index)
-    test_ill = read_entity_tuple_file(data_path + 'ref_pairs', entity2index, rel2index)
+
+    train_ill = read_entity_tuple_file(data_path + bootstrap_string + '_sup_pairs', entity2index, rel2index, entity2index)
+    test_ill = read_entity_tuple_file(data_path + "721_1folds/1/" + 'test_links', entity2index, rel2index, entity2index)
+    valid_ill = read_entity_tuple_file(data_path + "721_1folds/1/" + 'valid_links', entity2index, rel2index, entity2index)
+    train_ill_normal = read_entity_tuple_file(data_path + "721_1folds/1/" + 'train_links', entity2index, rel2index, entity2index)
     ent_ill = []
-    ent_ill.extend(train_ill)
+    ent_ill.extend(train_ill_normal)
     ent_ill.extend(test_ill)
+    ent_ill.extend(valid_ill)
+    ent_ill = list(set(ent_ill))
+    test_ill = list(set(test_ill) | set(valid_ill))
 
     index_with_entity_1 = read_idobj_tuple_file(data_path + 'ent_ids_1')
     index_with_entity_2 = read_idobj_tuple_file(data_path + 'ent_ids_2')
@@ -108,6 +133,25 @@ def get_attribute_value_type(value,value_type):
                 return "float"
             except:
                 return "string"
+
+
+def read_attribute_datas2(kg1_att_file_name, kg2_att_file_name):
+    """
+    return list of attribute triples [(entity_id,attribute,attributeValue,type of attributeValue)]
+    """
+    kg_att_datas = []
+    with open(kg1_att_file_name,"r",encoding="utf-8") as f:
+        for line in f:
+            e, a, l, l_type = line.rstrip().split('\t')
+            l_type = get_attribute_value_type(l,l_type)
+            kg_att_datas.append((a, l, l_type))
+    with open(kg2_att_file_name,"r",encoding="utf-8") as f:
+        for line in f:
+            e, a, l, l_type = line.rstrip().split('\t')
+            l_type = get_attribute_value_type(l, l_type)
+            kg_att_datas.append((a, l, l_type))
+
+    return kg_att_datas
 
 
 def read_attribute_datas(kg1_att_file_name, kg2_att_file_name, entity_list, entity2index, add_name_as_attTriples = True):

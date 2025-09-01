@@ -7,8 +7,8 @@ output_path = "/home/2022xuch/PNAL/PNALoverall/output"
 #lang_path = "/zh_en"
 #prefix1 = "http://" + lang + ".dbpedia.org/resource/"
 #prefix2 = "http://dbpedia.org/resource/"
-fold_path = "/DBP15k_full_fr_en_2_0613_233951"
-excel_num = 484
+fold_path = "/DBP15K_FULL_zh_en_0728_141349"
+excel_num = 539
 full_fold_path = output_path + fold_path
 
 #dataset_path = "/home/2022xuch/paris/datasets/DBP15k_full_" + lang + "_en_2"
@@ -66,6 +66,6 @@ with open(eqv_path, 'r', encoding='utf-8') as file:
 sup_path1 = full_fold_path + "/sup_pairs_" + str(excel_num)
 with open(sup_path1, 'w', encoding='utf-8') as file:
     for align in eqv:
-        if align[2] >= 0.9:
+        if align[2] >= 0.6:
             file.write(f"{align[0]}\t{align[1]}\n")
     

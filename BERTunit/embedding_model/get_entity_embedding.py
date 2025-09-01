@@ -50,7 +50,7 @@ def all_entity_pairs_gene(candidate_dict_list, ill_pair_list):
 
 
 def save_in_csv_format(My_Labels, name):
-    np.savetxt(name + '.csv', My_Labels, delimiter = ',', encoding="utf-8")  #, fmt='%.10f'  , fmt='%d'
+    np.savetxt(name, My_Labels, delimiter = ',', encoding="utf-8")  #, fmt='%.10f'  , fmt='%d'
 
 
 def entlist2emb(Model,entids,entid2data,cuda_num):
@@ -169,7 +169,7 @@ def main():
 
     #compute_sim(Model, entid_1, entid_2, eid2data, BATCH_SIZE, context="save_sim_mat:")
 
-    save_in_csv_format(ent_emb, ENT_EMB_PATH[:-4]) #284.19MB
+    save_in_csv_format(ent_emb, ENT_EMB_PATH) #284.19MB
     #save entity embedding.
     #pickle.dump(ent_emb, open(ENT_EMB_PATH, "wb"))
     print("save entity embedding....")
@@ -177,7 +177,7 @@ def main():
     entitynames = []
     for eid in range(0, len(eid2data.keys())):
         entitynames.append([index2entity[eid]])
-    np.savetxt(ENT_EMB_PATH[:-4]+"_entity_names", entitynames, delimiter = ',',fmt="%s",encoding="utf-8")
+    np.savetxt(EMB_ENT_NAME_PATH, entitynames, delimiter = ',',fmt="%s",encoding="utf-8")
     """
     entitynames1 = []
     for eid in entid_1:

@@ -5,6 +5,7 @@ from Param import *
 import numpy as np
 import time
 import pickle
+import shutil
 from eval_function import cos_sim_mat_generate,batch_topk,hit_res
 
 def entlist2emb(Model,entids,entid2data,cuda_num):
@@ -124,6 +125,9 @@ def train(Model,Criterion,Optimizer,Train_gene,train_ill,test_ill, entid2data, e
             print("Epoch {}: loss {:.3f}, using time {:.3f}".format(epoch,epoch_loss,epoch_train_time))
         if epoch >= 0:
             if epoch ==EPOCH_NUM-1:  #if epoch !=0:
+                #os.remove("/home/2022xuch/PNAL/BERTunit/Save_model/476_DBP15K_jaenmodel_epoch_14.p")
+                #shutil.rmtree("/home/2022xuch/PNAL/BERTunit/Save_model/DBP15k_full_fr_en_2_0608_170215")
+                #os.removedirs("/home/2022xuch/PNAL/BERTunit/Save_model/DBP15k_full_fr_en_2_0608_170215")
                 save(Model,train_ill,test_ill,entid2data,epoch)
             # test(Model,train_ill,entid2data,TEST_BATCH_SIZE,context="EVAL IN TRAIN SET")
             test(Model, test_ill, entid2data, TEST_BATCH_SIZE, context="EVAL IN TEST SET:")

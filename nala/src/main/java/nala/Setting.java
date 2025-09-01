@@ -23,8 +23,8 @@ public class Setting {
     public final File ontology1;
     /** Third ontology. Just kidding. It's the second, of course...*/
     public final File ontology2;
-    public File factstore1_1v1_assumption = null;
-    public File factstore2_1v1_assumption = null;
+    public File factstore1_1v1_range_assumption = null;
+    public File factstore2_1v1_range_assumption = null;
     public File train;
     public File valid;
     public File test;
@@ -170,7 +170,7 @@ public class Setting {
     public double missing_triple_initial_confidence;
     public boolean adaptive_entity_emb_sim_confidence;
     public boolean no_attr;
-    public int bootsrtap;
+    public int bootstrap;
     public int table_setting;
 
     /** Types of string distance used in Computed.compareStrings()*/
@@ -271,8 +271,8 @@ public class Setting {
     valid=Parameters.getFile("valid");
     test=Parameters.getFile("test");
     zero_seed=Parameters.getBoolean("zero_seed", false);
-    factstore1_1v1_assumption=Parameters.getFile("factstore1_1v1_assumption", null);
-    factstore2_1v1_assumption=Parameters.getFile("factstore2_1v1_assumption", null);
+    factstore1_1v1_range_assumption=Parameters.getFile("factstore1_1v1_range_assumption", null);
+    factstore2_1v1_range_assumption=Parameters.getFile("factstore2_1v1_range_assumption", null);
     home=Parameters.getOrRequestAndAddFile("home", "Enter the folder where log information can be stored");
     output_evaluate_path = Parameters.getOrRequestAndAddFile("output_evaluate_path", "Enter the folder where evaluate information can be stored");
 
@@ -359,7 +359,7 @@ public class Setting {
     missing_triple_initial_confidence = Parameters.getDouble("missing_triple_initial_confidence", 0.5); 
     adaptive_entity_emb_sim_confidence = Parameters.getBoolean("adaptive_entity_emb_sim_confidence", false);
     no_attr = Parameters.getBoolean("no_attr", false);
-    bootsrtap=Parameters.getInt("bootsrtap", 1);
+    bootstrap=Parameters.getInt("bootstrap", 1);
     table_setting=Parameters.getInt("table_setting", 5);
     max_evidence = 15;
     display_evidence_count = 10;

@@ -1,12 +1,12 @@
 # NALA
-Source code for "NALA: an Effective and Interpretable Entity Alignment Method [Experiments, Datasets]"
+Source code [Experiments, Datasets] for "NALA: an Effective and Interpretable Entity Alignment Method"
 
 ## Source code references
 The source code for some parts of our method has been adapted from the corresponding repositories. 
 The repositories are:
 - [BERT-INT](https://github.com/kosugi11037/bert-int) for BERT-INT.
 - [PARIS](https://github.com/dig-team/PARIS) for PARIS.
-- [PARIS+](https://github.com/epfl-dlab/entity-matchers) for entity-matchers(PARIS+).
+- [PARIS+](https://github.com/epfl-dlab/entity-matchers) for entity-matchers (PARIS+).
 
 ## Installation process
 
@@ -14,17 +14,31 @@ Create a virtual environment with Anaconda to run NALAoverall and install the im
 
 If you want to run the BERT unit, create an environment (fine for python3.8, torch1.12, CUDA11.6 and transformers) to run experiments with it.
 
-Download the datasets, pretrained BERT model and some experiment results (with evidence log file): you can find them following the link [https://figshare.com/s/dc9d168a1afe1db073be](https://figshare.com/s/dc9d168a1afe1db073be). 
+Download the datasets, pretrained BERT model and some experiment results (with evidence log file): you can find them following the link [https://figshare.com/s/37e2d85e87e35d90d2e5](https://figshare.com/s/37e2d85e87e35d90d2e5). 
 Extract the zip and place the contents of "datasets" into the empty folder "NALA/datasets". 
-Place the contents of "data(for BERT)" into the empty folder "NALA/BERTunit/data". 
 
-The DBP15k and D_W_15K_V2 datasets are consistent with other studies, with entities and relations' urls abbreviated for simplicity.
+The DBP15k datasets and OpenEA benchmark datasets are consistent with other studies, with urls of entities and relations abbreviated for simplicity.
 ## Reproduction of results
 
+run experiment with NALA's similarity inference module and matching module 
 ```shell
+conda activate **environment_name**
 cd NALAoverall
-
-python run_experiment.py --dataset DBP15k_full_zh_en_2 --dataset_division 721_1folds --table_setting 0
+nohup python3 -u run_experiment.py --dataset DBP15k_zh_en --dataset_division 721_1folds --table_setting 1 --bootstrap 2 > ./output/DBP15K_zh_en_result.log &
 ```
 (change the argument "table_setting" for different configuration groups (1-5) and ablation studies (6-11))
 
+finetune BERT unit
+```shell
+cd BERTunit/basic_bert_unit
+nohup python3 -u main.py > ../result.log &
+```
+
+get entity embedding similarity
+```shell
+cd BERTunit/embedding_model
+python clean_attribute_data.py
+nohup python3 -u get_attributeValue_embedding.py > ./result.log &
+python get_entity_embedding.py
+```
+due to code refactoring, the reproduced results may be slightly different with the reported result

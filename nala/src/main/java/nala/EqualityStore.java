@@ -487,19 +487,19 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
         int j, i1, j1;
         int sparse_alignment;
         SparseCostMatrix cm;
-        double[] cc = new double[ (fs1._1v1_assumption_size + 1) * setting.max_sparse_alignment + fs2._1v1_assumption_size]; 
-        int[] kk = new int[ (fs1._1v1_assumption_size + 1) * setting.max_sparse_alignment + fs2._1v1_assumption_size];
-        int[] number = new int[ fs1._1v1_assumption_size + 1];
-        int nRows = fs1._1v1_assumption_size;
-        int nCols = fs2._1v1_assumption_size;
+        double[] cc = new double[ (fs1._1v1_range_assumption_size + 1) * setting.max_sparse_alignment + fs2._1v1_range_assumption_size]; 
+        int[] kk = new int[ (fs1._1v1_range_assumption_size + 1) * setting.max_sparse_alignment + fs2._1v1_range_assumption_size];
+        int[] number = new int[ fs1._1v1_range_assumption_size + 1];
+        int nRows = fs1._1v1_range_assumption_size;
+        int nCols = fs2._1v1_range_assumption_size;
         int current_cc_size = 0;
         int current_row = -1;
         ArrayList<Pair<Integer,Double>> temp_alignments;
         //Pair<Integer,Double> temp_alignment;
-        assert(fs1._1v1_assumption_size == fs2._1v1_assumption_size);
+        assert(fs1._1v1_range_assumption_size == fs2._1v1_range_assumption_size);
         for (int i : alignment_sentences_fs1_To_fs2.keySet()) {
             //getTraceInfo("i ", fs1.proper_entity_s(i));
-            if (!fs1.belong_to_1v1_assumption(i)){
+            if (!fs1.belong_to_1v1_range_assumption(i)){
                 continue;
             }
             current_row++;
@@ -550,7 +550,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
         D.p(lapjv.getProcessingTime());
         a = null;//new AlignmentSentence(-1, -1, null, 1);
         for (int i : alignment_sentences_fs1_To_fs2.keySet()) {
-            if (!fs1.belong_to_1v1_assumption(i)){
+            if (!fs1.belong_to_1v1_range_assumption(i)){
                 continue;
             }
             i1 = fs1.id_small_to_1v1(i);
@@ -580,7 +580,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
         Iterator<AlignmentSentence> it;
         AlignmentSentence a;
         int j, i1, j1;
-        double[][] assigncost = new double[fs1._1v1_assumption_size][fs2._1v1_assumption_size];
+        double[][] assigncost = new double[fs1._1v1_range_assumption_size][fs2._1v1_range_assumption_size];
         int current_row = -1;
         for (int i = 0; i < assigncost.length; i++) {
             for (j = 0; j < assigncost[0].length; j++) {
@@ -589,7 +589,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
         }
         for (int i : alignment_sentences_fs1_To_fs2.keySet()) {
             //getTraceInfo("i ", fs1.proper_entity_s(i));
-            if (!fs1.belong_to_1v1_assumption(i)){
+            if (!fs1.belong_to_1v1_range_assumption(i)){
                 continue;
             }
             current_row++;
@@ -608,10 +608,10 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
         final long end = System.currentTimeMillis();
         final long processingTime = end - start;
         D.p("lapjv processingTime:", processingTime);
-        assert(fs1._1v1_assumption_size <= fs2._1v1_assumption_size);
+        assert(fs1._1v1_range_assumption_size <= fs2._1v1_range_assumption_size);
         j = 0;
         for (int i : alignment_sentences_fs1_To_fs2.keySet()){
-            if (!fs1.belong_to_1v1_assumption(i)){
+            if (!fs1.belong_to_1v1_range_assumption(i)){
                 continue;
             }
             j++;
@@ -622,7 +622,7 @@ public class EqualityStore extends SubThingStore<Integer> implements Closeable {
         D.p("\n\n");
         a = null;//new AlignmentSentence(-1, -1, null, 1);
         for (int i : alignment_sentences_fs1_To_fs2.keySet()) {
-            if (!fs1.belong_to_1v1_assumption(i)){
+            if (!fs1.belong_to_1v1_range_assumption(i)){
                 continue;
             }
             i1 = fs1.id_small_to_1v1(i);

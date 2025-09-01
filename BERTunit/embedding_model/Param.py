@@ -1,8 +1,25 @@
 """
 hyper-parameters:
 """
-CUDA_NUM = 2 #GPU num
-LANG = 'zh' #language 'zh'/'ja'/'fr'
+import os
+
+#these 5 parameters need manual adjustment each run
+LANG = ["zh", "ja", "fr"][0] #language 'zh'/'ja'/'fr'
+table_setting = 1
+bootstrap = 2
+WITH_TRANS = False # True False
+CUDA_NUM = 3 # used GPU num
+
+if table_setting == 4 or table_setting == 0:
+    bootstrap_string = "setting_" + "4_" + LANG + "_bootstrap_" + str(bootstrap)
+elif table_setting == 3:
+    bootstrap_string = "setting_" + "3_" + LANG + "_bootstrap_" + str(bootstrap)
+elif table_setting == 1 or table_setting == 2 or table_setting == 5 or table_setting > 5:
+    bootstrap_string = "setting_" + "125_" + LANG + "_bootstrap_" + str(bootstrap)
+
+if WITH_TRANS:
+    bootstrap_string = bootstrap_string + "_trans"
+
 ENTITY_NEIGH_MAX_NUM = 50 # max sampling neighbor num of entity
 ENTITY_ATTVALUE_MAX_NUM = 50 #max sampling attributeValue num of entity
 KERNEL_NUM = 21
@@ -15,35 +32,39 @@ LEARNING_RATE = 5e-4 # learning rate
 MARGIN = 1 # margin
 EPOCH_NUM = 200 # train epoch num
 
-WITH_TRANS = False#True  False
-
 INTERACTION_MODEL_SAVE_PATH = "../Save_model/interaction_model_{}en.bin".format(LANG) #interaction model save path.
 
 #load model(base_bert_unit_model) path
-excel_num = 194
 BASIC_BERT_UNIT_MODEL_SAVE_PATH = "../Save_model/"
-if WITH_TRANS:
-    BASIC_BERT_UNIT_MODEL_SAVE_PREFIX = "trans_" + str(excel_num) + "_DBP15K_{}en".format(LANG)
-else:
-    BASIC_BERT_UNIT_MODEL_SAVE_PREFIX = str(excel_num) + "_DBP15K_{}en".format(LANG)
+BASIC_BERT_UNIT_MODEL_SAVE_PREFIX = "DBP15K_" + bootstrap_string
 
 LOAD_BASIC_BERT_UNIT_MODEL_EPOCH_NUM = 14
 BASIC_BERT_UNIT_MODEL_OUTPUT_DIM = 300
 
 #load data path
 
-DATA_PATH = r"../data/dbp15k/{}_en_2/".format(LANG)
-
+file_path = os.path.abspath(__file__)
+project_dir = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
+DATA_PATH = os.path.join(project_dir, f'datasets/DBP15k_{LANG}_en/')
+DBP = True#True  False
 
 #candidata_save_path
 TRAIN_CANDIDATES_PATH = DATA_PATH + 'train_candidates.pkl'
 TEST_CANDIDATES_PATH = DATA_PATH + 'test_candidates.pkl'
 
 #entity embedding and attributeValue embedding save path.
-ENT_EMB_PATH = DATA_PATH + '{}_emb_{}.pkl'.format(BASIC_BERT_UNIT_MODEL_SAVE_PREFIX,LOAD_BASIC_BERT_UNIT_MODEL_EPOCH_NUM)
-ATTRIBUTEVALUE_EMB_PATH = DATA_PATH + str(excel_num) + "attribute_value_embedding.pkl"
-ATTRIBUTEVALUE_LIST_PATH = DATA_PATH + str(excel_num) + "_attribute_value_list.pkl" #1-1 match to attributeValue embedding.
-ATTRIBUTEVALUE_SIM_PATH = DATA_PATH + str(excel_num) + "_attribute_value_sim.pkl"
+if not WITH_TRANS:
+    ENT_EMB_PATH = DATA_PATH + str(bootstrap_string) + "_entity_emb.csv"
+else:
+    ENT_EMB_PATH = DATA_PATH + str(bootstrap_string) + "_trans_entity_emb.csv"
+EMB_ENT_NAME_PATH = DATA_PATH + LANG + "_emb_entity_names"
+ATTRIBUTEVALUE_EMB_PATH = DATA_PATH + bootstrap_string + "attribute_value_embedding.pkl"
+if(DBP):
+    ATTRIBUTEVALUE_LIST_PATH = DATA_PATH + bootstrap_string + "_attribute_value_list.pkl" #1-1 match to attributeValue embedding.
+    ATTRIBUTEVALUE_SIM_PATH = DATA_PATH + bootstrap_string + "_attribute_value_sim.pkl"
+else:
+    ATTRIBUTEVALUE_LIST_PATH = DATA_PATH + "attribute_value_list.pkl" #1-1 match to attributeValue embedding.
+    ATTRIBUTEVALUE_SIM_PATH = DATA_PATH + "attribute_value_sim.pkl"
 
 #(candidate) entity_pairs save path.
 ENT_PAIRS_PATH = DATA_PATH + 'ent_pairs.pkl' #[(e1,ea),(e1,eb)...]

@@ -14,7 +14,8 @@ abbreviate_dict = {"http://dbpedia.org/resource/":"dbp_en:","http://dbpedia.org/
                    ,"http://ja.dbpedia.org/resource/":"dbp_ja:","http://ja.dbpedia.org/property/":"dbp_ja_prop:"
                    ,"http://www.w3.org/2001/XMLSchema#":"xsd:","http://dbpedia.org/datatype/":"dbp_type:"
                    ,"http://xmlns.com/foaf/0.1/":"foaf:"
-                   ,"http://purl.org/dc/elements/1.1/":"purl:"}
+                   ,"http://purl.org/dc/elements/1.1/":"purl:"
+                   , "http://dbpedia.org/ontology/":"dbp_onto_prop:"}
 
 def abbreviate(str1, r=0, attribute=0):
     for full in abbreviate_dict.keys():
@@ -165,8 +166,33 @@ def main(root_folder, dataset):
         f.writelines(lines)
 
 
+def main_preprocess_old_bootstrap_sup_pairs(dataset_folder, sup_pairs):
+    pairs = []
+    with open(dataset_folder + "/" + sup_pairs, 'r', encoding='utf-8') as file:
+        for line in file:
+            line = line.strip('\n').split('\t')
+            if len(line)!= 2:
+                continue
+            pairs.append((abbreviate(line[0]), abbreviate(line[1])))
+    with open(dataset_folder + "/" + sup_pairs, 'w', encoding='utf-8') as file:
+        for align in pairs:
+            file.write(f"{align[0]}\t{align[1]}\n")
+    
 if __name__ == "__main__":
 
-    #main("/home/2022xuch/paris/datasets", "DBP15k_full_zh_en_2/供bertint")
-    #main("/home/2022xuch/paris/datasets", "DBP15k_full_ja_en_2/供bertint")
-    main("/home/2022xuch/paris/datasets", "DBP15k_full_fr_en_2/供bertint")
+    file_path = os.path.abspath(__file__)
+    project_dir = os.path.dirname(os.path.dirname(os.path.dirname(file_path)))
+    #print('project_dir=',project_dir)
+    #print("cur work dir = ", os.getcwd())
+    for i in range(3):
+        LANG = ["zh", "ja", "fr"][i]
+        DATA_PATH = os.path.join(project_dir, f'datasets/DBP15k_{LANG}_en')
+        for bootstrap in range(2,4):
+            sup_pairs = f"setting_3_bootstrap_{bootstrap}_sup_pairs"
+            main_preprocess_old_bootstrap_sup_pairs(DATA_PATH, sup_pairs)
+        for bootstrap in range(2,3):
+            sup_pairs = f"setting_4_bootstrap_{bootstrap}_sup_pairs"
+            main_preprocess_old_bootstrap_sup_pairs(DATA_PATH, sup_pairs)
+        for bootstrap in range(2,3):
+            sup_pairs = f"setting_125_bootstrap_{bootstrap}_sup_pairs"
+            main_preprocess_old_bootstrap_sup_pairs(DATA_PATH, sup_pairs)

@@ -8,15 +8,31 @@ import re
 import random
 logging.getLogger("transformers.tokenization_utils").setLevel(logging.ERROR)
 
-
+abbreviate_dict = {"http://dbpedia.org/resource/":"dbp_en:","http://dbpedia.org/property/":"dbp_en_prop:","http://zh.dbpedia.org/resource/":"dbp_zh:","http://zh.dbpedia.org/property/":"dbp_zh_prop:"
+                   ,"http://fr.dbpedia.org/resource/":"dbp_fr:","http://fr.dbpedia.org/property/":"dbp_fr_prop:"
+                   ,"http://ja.dbpedia.org/resource/":"dbp_ja:","http://ja.dbpedia.org/property/":"dbp_ja_prop:"
+                   ,"http://www.w3.org/2001/XMLSchema#":"xsd:","http://dbpedia.org/datatype/":"dbp_type:"
+                   ,"http://xmlns.com/foaf/0.1/":"foaf:"
+                   ,"http://purl.org/dc/elements/1.1/":"purl:"
+                   , "http://dbpedia.org/ontology/":"dbp_onto_prop:"}
 
 def get_name(string):
+    """
     if r"resource/" in string:
         sub_string = string.split(r"resource/")[-1]
     elif r"property/" in string:
         sub_string = string.split(r"property/")[-1]
     else:
         sub_string = string.split(r"/")[-1]
+    sub_string = sub_string.replace('_',' ')
+    return sub_string
+    """
+    for value in abbreviate_dict.values():
+        if value in string:
+            sub_string = string.split(value)[-1]
+            sub_string = sub_string.replace('_',' ')
+            return sub_string
+    sub_string = string.split(r"/")[-1]
     sub_string = sub_string.replace('_',' ')
     return sub_string
 
@@ -137,7 +153,7 @@ def read_data(data_path = DATA_PATH,des_dict_path = DES_DICT_PATH):
                 ret.append( ( int(th[0]),th[1] ) )
         return ret
     def read_entity_tuple_file(file_path, entity2index, rel2index, before_trans_entity2index):
-        print('loading a idtuple file...   ' + file_path)
+        print('loading a entity name tuple file...   ' + file_path)
         ret = []
         with open(file_path, "r", encoding='utf-8') as f:
             for line in f:
@@ -168,29 +184,25 @@ def read_data(data_path = DATA_PATH,des_dict_path = DES_DICT_PATH):
     rel2index = {r:idx for idx,r in index2rel.items()}
 
     #triples
-    rel_triples_1 = read_idtuple_file(data_path + 'triples_1')
-    rel_triples_2 = read_idtuple_file(data_path + 'triples_2')
+    rel_triples_1 = read_entity_tuple_file(data_path + 'rel_triples_1', entity2index, rel2index, before_trans_entity2index)
+    rel_triples_2 = read_entity_tuple_file(data_path + 'rel_triples_2', entity2index, rel2index, before_trans_entity2index)
     index_with_entity_1 = read_idobj_tuple_file(data_path + 'ent_ids_1')
     index_with_entity_2 = read_idobj_tuple_file(data_path + 'ent_ids_2')
 
-    #ill
-    #train_ill = read_idtuple_file(data_path + 'sup_pairs')
-    #print(train_ill)
-    #print("/n/n/n")
-    #test_ill = read_idtuple_file(data_path + 'ref_pairs')
-    train_ill_normal = read_entity_tuple_file(data_path + 'sup_pairs', entity2index, rel2index, before_trans_entity2index)
     if ACTUALLY_DO_TRAINING:
-        train_ill = read_entity_tuple_file(data_path + 'sup_pairs_' + str(excel_num), entity2index, rel2index, before_trans_entity2index)
+        train_ill = read_entity_tuple_file(data_path + bootstrap_string + '_sup_pairs', entity2index, rel2index, before_trans_entity2index)
     else:
         train_ill = []
-    test_ill = read_entity_tuple_file(data_path + 'ref_pairs', entity2index, rel2index, before_trans_entity2index)
+    test_ill = read_entity_tuple_file(data_path + "721_1folds/1/" + 'test_links', entity2index, rel2index, before_trans_entity2index)
+    valid_ill = read_entity_tuple_file(data_path + "721_1folds/1/" + 'valid_links', entity2index, rel2index, before_trans_entity2index)
+    train_ill_normal = read_entity_tuple_file(data_path + "721_1folds/1/" + 'train_links', entity2index, rel2index, before_trans_entity2index)
 
-    #print(train_ill)
-    #print(len(train_ill))
     ent_ill = []
     ent_ill.extend(train_ill_normal)
     ent_ill.extend(test_ill)
-    test_ill = list(set(ent_ill) - set(train_ill))
+    ent_ill.extend(valid_ill)
+    ent_ill = list(set(ent_ill))
+    test_ill = list(set(test_ill) | set(valid_ill))
 
     #ent_idx
     entid_1 = [entid for entid,_ in index_with_entity_1]

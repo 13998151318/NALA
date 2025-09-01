@@ -890,14 +890,14 @@ public class Nala {
                 for (int y2 = 0; y2 < fs2.num_proper_entities(); y2++) {
                     if (temp_a_s_for_one_entity[y2] == null)
                         continue;
-                    if (fs1.belong_to_1v1_assumption(fs1.id_big_to_small(y1))) {
-						if (temp_a_s_for_one_entity[y2].truthValue.getConfidence() > max && fs2.belong_to_1v1_assumption(y2)) {
+                    if (fs1.belong_to_1v1_range_assumption(fs1.id_big_to_small(y1))) {
+						if (temp_a_s_for_one_entity[y2].truthValue.getConfidence() > max && fs2.belong_to_1v1_range_assumption(y2)) {
 							key = y2;
 							max = temp_a_s_for_one_entity[y2].truthValue.getConfidence();
 						}
 					}
-					if (!fs1.belong_to_1v1_assumption(fs1.id_big_to_small(y1))) {
-						if (temp_a_s_for_one_entity[y2].truthValue.getConfidence() > max && !fs2.belong_to_1v1_assumption(y2)) {
+					if (!fs1.belong_to_1v1_range_assumption(fs1.id_big_to_small(y1))) {
+						if (temp_a_s_for_one_entity[y2].truthValue.getConfidence() > max && !fs2.belong_to_1v1_range_assumption(y2)) {
 							key = y2;
 							max = temp_a_s_for_one_entity[y2].truthValue.getConfidence();
 						}
@@ -1285,13 +1285,13 @@ public class Nala {
             for (int y2 = 0; y2 < fs2.num_proper_entities(); y2++) {
                 if (temp_a_s_for_one_entity[y2] == null)
                     continue;
-                if (fs1.belong_to_1v1_assumption(fs1.id_big_to_small(y1))) {
-                    if (!fs2.belong_to_1v1_assumption(y2)) {
+                if (fs1.belong_to_1v1_range_assumption(fs1.id_big_to_small(y1))) {
+                    if (!fs2.belong_to_1v1_range_assumption(y2)) {
                         temp_a_s_for_one_entity[y2] = null;
                     }
                 }
-                if (!fs1.belong_to_1v1_assumption(fs1.id_big_to_small(y1))) {
-                    if (fs2.belong_to_1v1_assumption(y2)) {
+                if (!fs1.belong_to_1v1_range_assumption(fs1.id_big_to_small(y1))) {
+                    if (fs2.belong_to_1v1_range_assumption(y2)) {
                         temp_a_s_for_one_entity[y2] = null;
                     }
                 }
@@ -1569,9 +1569,9 @@ public class Nala {
                 divide_confidence_num = 2;
             else
                 divide_confidence_num = 3;
-            if (setting.bootsrtap == 0 && setting.table_setting == 3)
+            if (setting.bootstrap == 0 && setting.table_setting == 3)
                 divide_confidence_num *= 4;
-            //if (setting.bootsrtap == 1 && setting.table_setting == 3)
+            //if (setting.bootstrap == 1 && setting.table_setting == 3)
             //    divide_confidence_num *= 2;W
             //if (setting.table_setting == 3)
             //    divide_confidence_num *= 2;
@@ -2251,19 +2251,19 @@ public class Nala {
         for (int i = 0; i < entities.size(); i++) {
             int y1 = entities.get(i);
             temp_a_s_for_one_entity1 = new AlignmentSentence[factStore2.num_proper_entities()];
-            y1_belong = factStore1.belong_to_1v1_assumption(factStore1.id_big_to_small(y1));
+            y1_belong = factStore1.belong_to_1v1_range_assumption(factStore1.id_big_to_small(y1));
             if(setting.use_entity_emb_sim){
                 if(factStore1.entity_emb.get(y1)==null){
                     continue;
                 }
                 for(int y2 : factStore2.entity_emb.keySet().toArray()){
                     if (y1_belong) {
-                        if (!factStore2.belong_to_1v1_assumption(y2)) {
+                        if (!factStore2.belong_to_1v1_range_assumption(y2)) {
                             continue;
                         }
                     }
                     if (!y1_belong) {
-                        if (factStore2.belong_to_1v1_assumption(y2)) {
+                        if (factStore2.belong_to_1v1_range_assumption(y2)) {
                             continue;
                         }
                     }
@@ -2285,12 +2285,12 @@ public class Nala {
                 }
                 for(int y2 : factStore2.trans_entity_emb.keySet().toArray()){
                     if (y1_belong) {
-                        if (!factStore2.belong_to_1v1_assumption(y2)) {
+                        if (!factStore2.belong_to_1v1_range_assumption(y2)) {
                             continue;
                         }
                     }
                     if (!y1_belong) {
-                        if (factStore2.belong_to_1v1_assumption(y2)) {
+                        if (factStore2.belong_to_1v1_range_assumption(y2)) {
                             continue;
                         }
                     }
@@ -2388,8 +2388,8 @@ public class Nala {
         ArrayList<ArrayList<Float>> trans_entity_emb = new ArrayList<>(40000);
         ArrayList<String> emb_entity_names = new ArrayList<>(40000);
         load_embeddings(setting.entity_emb, setting.trans_entity_emb, setting.emb_entity_names, setting.attribute_value_names, entity_emb, trans_entity_emb, emb_entity_names);
-		factStore1 = loadFactStore(1, setting.ontology1, setting.factstore1_1v1_assumption, "", "", entity_emb, trans_entity_emb, emb_entity_names, id_to_value);
-		factStore2 = loadFactStore(2, setting.ontology2, setting.factstore2_1v1_assumption, "", "", entity_emb, trans_entity_emb, emb_entity_names, id_to_value);
+		factStore1 = loadFactStore(1, setting.ontology1, setting.factstore1_1v1_range_assumption, "", "", entity_emb, trans_entity_emb, emb_entity_names, id_to_value);
+		factStore2 = loadFactStore(2, setting.ontology2, setting.factstore2_1v1_range_assumption, "", "", entity_emb, trans_entity_emb, emb_entity_names, id_to_value);
 		if(setting.use_attribute_value_emb_sim){
             load_value_emb_sim();
         }

@@ -45,7 +45,7 @@ def read_att_data(data_path):
     att_data = []
     with open(data_path,"r",encoding="utf-8") as f:
         for line in f:
-            e,a,l = line.rstrip('\n').split(' ',2)
+            e,a,l = line.rstrip('\n').split('\t',2)
             e = e.strip('<>')
             a = a.strip('<>')
             if "/property/" in a:
@@ -151,8 +151,8 @@ if __name__ == '__main__':
     print("----------------clean attribute data--------------------")
     print("Start removing noise from attribute triples")
     #load attribute triples
-    keep_data_1 = read_att_data(DATA_PATH + LANG + '_att_triples')
-    keep_data_2 = read_att_data(DATA_PATH + 'en' + '_att_triples')
+    keep_data_1 = read_att_data(DATA_PATH + 'attr_triples_1')
+    keep_data_2 = read_att_data(DATA_PATH + 'attr_triples_2')
 
     remove_data_1 = []
     remove_data_2 = []

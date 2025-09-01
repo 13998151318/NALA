@@ -90,12 +90,14 @@ public class FactStore {
     public boolean isLiteral[];
     //xch1
     public boolean is_proper_entity[];
-    public boolean belong_to_1v1_assumption[];
-    public int _1v1_assumption_size;
-    //public int belong_to_1v1_assumption[];
-    public boolean is_attribute_relation[];
 
     public boolean has_1v1_assumption = false;
+    public boolean belong_to_1v1_range_assumption[];
+    public int _1v1_range_assumption_size;
+
+    public boolean is_attribute_relation[];
+
+    
 
 
     public int joinLengthLimit;
@@ -186,7 +188,7 @@ public class FactStore {
         fs.isClass = isClass.clone();
         fs.isLiteral = isLiteral.clone();
         fs.is_proper_entity = is_proper_entity.clone();
-        fs.belong_to_1v1_assumption = belong_to_1v1_assumption.clone();
+        fs.belong_to_1v1_range_assumption = belong_to_1v1_range_assumption.clone();
         fs.has_1v1_assumption = has_1v1_assumption;
         fs.is_attribute_relation = is_attribute_relation.clone();
         fs.finalized = false;
@@ -447,10 +449,10 @@ public class FactStore {
 
     //xch1
     //e is proper entity id (small)
-    public boolean belong_to_1v1_assumption(int e) {
+    public boolean belong_to_1v1_range_assumption(int e) {
         if (this.finalized) {
             // cache is ready
-            return belong_to_1v1_assumption[e];
+            return belong_to_1v1_range_assumption[e];
         }
         Announce.message("not finalized");
         return false;
@@ -754,7 +756,7 @@ public class FactStore {
         //xch1
         if(_1v1_assumption != null) {
             has_1v1_assumption = true;
-            belong_to_1v1_assumption = new boolean[num_proper_entities()];
+            belong_to_1v1_range_assumption = new boolean[num_proper_entities()];
             FileLines lines;
             try {
                 lines = new FileLines(_1v1_assumption, "UTF-8", null);
@@ -767,13 +769,13 @@ public class FactStore {
             for(String e : lines) {
                 try {
                         //<xxx-unused> = false
-                        belong_to_1v1_assumption[id_big_to_small(entity(e.trim()))] = true;
+                        belong_to_1v1_range_assumption[id_big_to_small(entity(e.trim()))] = true;
                         //Announce.message(e);
                 } catch (ArrayIndexOutOfBoundsException e1) {}
             }
             int _1v1_ass = 0;
             for(int i = 0; i < num_proper_entities(); i++) {
-                if (belong_to_1v1_assumption[i] == true)
+                if (belong_to_1v1_range_assumption[i] == true)
                     _1v1_ass ++;
             }
             Announce.message("_1v1_ass:", _1v1_ass);
@@ -781,13 +783,13 @@ public class FactStore {
             _1v1_id_to_proper_entity_id = new int[_1v1_ass];
             n = -1;
             for(int i = 0; i < num_proper_entities(); i++) {
-                if (belong_to_1v1_assumption[i] == true){
+                if (belong_to_1v1_range_assumption[i] == true){
                     n++;
                     proper_entity_id_to_1v1_id[i] = n;
                     _1v1_id_to_proper_entity_id[n] = i;
                 }
             }
-            _1v1_assumption_size = _1v1_ass;
+            _1v1_range_assumption_size = _1v1_ass;
         }
         else{
             has_1v1_assumption = false;
@@ -1121,10 +1123,10 @@ public class FactStore {
         TruthFunctions.set_setting(setting.all_revision, setting.all_prob_revision);
         TruthValue t[], temp; //t[0]表示从多条path选取的最终结果
         TruthValue p[]; //代表由某个path推出的最优y1 <-> y2的推理结果
-        double c = 0.6003087066251795;
+        double c = 0.722637943435727;
         c = TruthFunctions.divide_confidence(c,2);
         D.p("c",c);
-        c = TruthFunctions.divide_confidence(c,2);
+        c = TruthFunctions.divide_confidence(c,4);
         D.p("c",c);
         t = new TruthValue[25];
         TruthValue tr[]; 
