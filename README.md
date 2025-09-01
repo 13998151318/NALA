@@ -3,7 +3,7 @@ Source code [Experiments, Datasets] for "NALA: an Effective and Interpretable En
 (Findings of the Association for Computational Linguistics: EMNLP 2024)[paper link in acl anthology](https://aclanthology.org/2024.findings-emnlp.806/)
 
 ## Source code references
-The source code for some parts of our method has been adapted from the corresponding repositories. 
+The source code of some parts of this method is adapted from the corresponding repositories. 
 The repositories are:
 - [BERT-INT](https://github.com/kosugi11037/bert-int) for BERT-INT.
 - [PARIS](https://github.com/dig-team/PARIS) for PARIS.
