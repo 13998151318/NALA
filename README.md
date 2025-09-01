@@ -31,12 +31,14 @@ nohup python3 -u run_experiment.py --dataset DBP15k_zh_en --dataset_division 721
 
 finetune BERT unit
 ```shell
+**update parameters in Param.py**
 cd BERTunit/basic_bert_unit
 nohup python3 -u main.py > ../result.log &
 ```
 
 get entity embedding similarity
 ```shell
+**update parameters in Param.py**
 cd BERTunit/embedding_model
 python clean_attribute_data.py
 nohup python3 -u get_attributeValue_embedding.py > ./result.log &
