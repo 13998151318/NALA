@@ -1569,9 +1569,9 @@ public class Nala {
                 divide_confidence_num = 2;
             else
                 divide_confidence_num = 3;
-            if (setting.bootstrap == 0 && setting.table_setting == 3)
+            if (setting.bootstrap == 1 && setting.table_setting == 3)
                 divide_confidence_num *= 4;
-            //if (setting.bootstrap == 1 && setting.table_setting == 3)
+            //if (setting.bootstrap == 2 && setting.table_setting == 3)
             //    divide_confidence_num *= 2;W
             //if (setting.table_setting == 3)
             //    divide_confidence_num *= 2;
