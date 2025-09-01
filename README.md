@@ -36,7 +36,7 @@ cd BERTunit/basic_bert_unit
 nohup python3 -u main.py > ../result.log &
 ```
 
-get entity embedding similarity
+get attribute value embedding similarity & entity embedding similarity
 ```shell
 **update parameters in Param.py**
 cd BERTunit/embedding_model
